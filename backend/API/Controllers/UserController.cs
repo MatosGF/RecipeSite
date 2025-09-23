@@ -104,8 +104,6 @@ namespace API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
-            try
-            {
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
 
