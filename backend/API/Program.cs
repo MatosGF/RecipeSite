@@ -69,7 +69,6 @@ namespace API
                 app.UseSwaggerUI();
             }
 
-            app.UseHttpsRedirection();
             app.UseDeveloperExceptionPage();
             app.UseCors("AllowAll");
 

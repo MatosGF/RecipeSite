@@ -13,24 +13,26 @@ namespace Repository.Implementation
            : base(context)
         {
         }
-        public async Task LockUserAsync(int userId/*, bool stats*/) // Mudar para o Update.
+        public async Task LockUserAsync(int userId)
         {
             var user = await _context.FindAsync<User>(userId);
             if (user != null)
             {
-                user.IsRegistered = false;
+                user.IsBlocked = true; // ALTEREI para isBlocked
                 await _context.SaveChangesAsync();
             }
         }
+
         public async Task UnlockUserAsync(int userId)
         {
             var user = await _context.FindAsync<User>(userId);
             if (user != null)
             {
-                user.IsRegistered = true;
+                user.IsBlocked = false; // ALTEREI para isBlocked
                 await _context.SaveChangesAsync();
             }
         }
+
         public async Task<User> GetByEmailIncluded(string email)
         {
             return await _context.Set<User>()
@@ -44,7 +46,14 @@ namespace Repository.Implementation
                  .FirstOrDefaultAsync(e => e.Email == email);
         }
 
-      
+        public async Task<List<User>> SearchByNameAsync(string name)
+        {
+            return await _context.Set<User>()
+                .Where(u => u.Name.Contains(name))
+                .ToListAsync();
+        }
+
+
     }
 
 }

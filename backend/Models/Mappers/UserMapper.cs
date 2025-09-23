@@ -17,6 +17,7 @@ namespace Models.Mappers
                 Favorites = entity.Favorites,
                 IsAdmin = entity.IsAdmin,
                 IsAtive = entity.IsAtive,
+                IsBlocked = entity.IsBlocked,
                 IsRegistered = entity.IsRegistered,
                 Recipes = entity.Recipes,
             };
@@ -42,6 +43,7 @@ namespace Models.Mappers
                 Favorites = entityDto.Favorites,
                 IsAdmin = entityDto.IsAdmin,
                 IsAtive = entityDto.IsAtive,
+                IsBlocked = entityDto.IsBlocked,
                 IsRegistered = entityDto.IsRegistered,
                 Recipes = entityDto.Recipes,
             };
@@ -57,9 +59,12 @@ namespace Models.Mappers
             entity.Favorites = entityDto.Favorites;
             entity.IsAdmin = entityDto.IsAdmin;
             entity.IsAtive = entityDto.IsAtive;
+            entity.IsBlocked = entityDto.IsBlocked;
             entity.IsRegistered = entityDto.IsRegistered;
             entity.Recipes = entityDto.Recipes;
             return entity;
         }
     }
+
+
 }

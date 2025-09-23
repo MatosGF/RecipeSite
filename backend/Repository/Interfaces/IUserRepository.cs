@@ -9,6 +9,7 @@ namespace Repository.Interfaces
         Task LockUserAsync(int userId);
         Task UnlockUserAsync(int userId);
         Task<User> GetByEmailIncluded(string email);
+        Task<List<User>> SearchByNameAsync(string name);
 
     }
 }

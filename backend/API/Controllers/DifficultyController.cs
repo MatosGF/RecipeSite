@@ -71,7 +71,7 @@ namespace API.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, DifficultyDto item)
         {
             try
@@ -101,7 +101,7 @@ namespace API.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             try

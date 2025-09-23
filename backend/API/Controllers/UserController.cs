@@ -1,6 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Models;
+using Service.Implementation;
 using Service.Interfaces;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace API.Controllers
 {
@@ -11,11 +17,16 @@ namespace API.Controllers
         private readonly ILogger<UserController> _logger;
         private readonly IUserService _service;
 
-        public UserController(ILogger<UserController> logger, IUserService service)
+        private readonly IConfiguration _configuration;
+
+        public UserController(IUserService service, ILogger<UserController> logger, IConfiguration configuration)
         {
-            _logger = logger;
             _service = service;
+            _logger = logger;
+            _configuration = configuration;
         }
+
+        
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserDto>>> GetAll()
@@ -104,28 +115,77 @@ namespace API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-                var user = await _service.AuthenticateAsync(loginDto.Email, loginDto.Senha);
+            var user = await _service.AuthenticateAsync(loginDto.Email, loginDto.Password);
 
-                if (user == null)
-                    return Unauthorized("Email ou senha inválidos");
+            if (user == null)
+                return Unauthorized("Email ou senha inválidos");
 
-                // Aqui você pode gerar um token JWT, se quiser
-                // ou apenas retornar os dados do usuário autenticado
-                return Ok(new
-                {
-                    token = "aqui-vai-o-token-se-tiver",
-                    usuario = user
-                });
-            }
-            catch (Exception ex)
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var claims = new[]
             {
-                _logger.LogError(ex, "Erro ao fazer login");
-                return StatusCode(500, "Erro interno no servidor");
-            }
+                new Claim("email", user.Email),
+                new Claim("name", user.Name),
+                new Claim("role", user.IsAdmin ? "admin" : "user"),
+                new Claim("userId", user.Id.ToString())
+            };
+
+            var token = new JwtSecurityToken(
+                issuer: _configuration["Jwt:Issuer"],
+                audience: _configuration["Jwt:Audience"],
+                claims: claims,
+                expires: DateTime.UtcNow.AddHours(2),
+                signingCredentials: creds
+            );
+
+            var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return Ok(new
+            {
+                token = tokenString,
+                usuario = new
+                {
+                    user.Id,
+                    user.Name,
+                    user.Email,
+                    user.IsAdmin
+                }
+            });
         }
+
+        [HttpPost("{id}/lock")]
+        public async Task<IActionResult> LockUser(int id)
+        {
+            await _service.LockUser(id);
+            return Ok(new { message = $"Usuário {id} bloqueado com sucesso." });
+        }
+
+        [HttpPost("{id}/unlock")]
+        public async Task<IActionResult> UnlockUser(int id)
+        {
+            await _service.UnlockUser(id);
+            return Ok(new { message = $"Usuário {id} desbloqueado com sucesso." });
+        }
+
+
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchUsers(string name)
+        {
+            var users = await _service.SearchUsersAsync(name);
+            return Ok(users.Select(u => new {
+                u.Id,
+                Name = u.Name,   
+                u.Email,
+                u.IsAdmin,
+                u.IsBlocked
+            }));
+        }
+
+
 
 
         //[HttpDelete]

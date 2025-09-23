@@ -1,4 +1,5 @@
 ﻿using Models;
+using Models.Entities;
 
 namespace Service.Interfaces
 {
@@ -10,10 +11,10 @@ namespace Service.Interfaces
         Task<UserDto> GetUserByEmail(string email);
         Task LockUser(int userId);
         Task<bool> Login(string email, string password);
-        void ManageUserAccess(int userId, string action);
         Task UnlockUser(int userId);
         Task<UserDto> Update(UserDto user);
-        Task<UserDto?> AuthenticateAsync(string email, string senha);
+        Task<UserDto?> AuthenticateAsync(string email, string pa);
+        Task<IEnumerable<UserDto>> SearchUsersAsync(string name);
 
     }
 }

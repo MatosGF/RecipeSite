@@ -71,7 +71,7 @@ namespace API.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, IngredientDto item)
         {
             try
@@ -96,12 +96,12 @@ namespace API.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error updating IngredientDto with ID {{Id}}", id);
+                _logger.LogError(ex, "Error updating IngredientDto with ID {Id}", id);
                 return StatusCode(500, "Internal server error");
             }
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             try
@@ -116,7 +116,7 @@ namespace API.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error deleting IngredientDto with ID {{Id}}", id);
+                _logger.LogError(ex, "Error deleting IngredientDto with ID {Id}", id);
                 return StatusCode(500, "Internal server error");
             }
         }

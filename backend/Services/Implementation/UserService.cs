@@ -87,7 +87,6 @@ namespace Service.Implementation
         }
         private string HashPassword(string password)
         {
-            // Verifica se a senha não é nula ou vazia
             if (string.IsNullOrWhiteSpace(password))
             {
                 throw new ArgumentException("A senha não pode ser nula ou vazia.", nameof(password));
@@ -95,15 +94,16 @@ namespace Service.Implementation
 
             try
             {
-                // Gera o hash da senha usando BCrypt
                 return BCrypt.Net.BCrypt.HashPassword(password);
             }
             catch (Exception ex)
             {
-                // Lidar com exceções inesperadas
                 throw new InvalidOperationException("Erro ao gerar hash da senha.", ex);
             }
         }
+
+
+
         private bool VerifyPassword(string password, string storedHash)
         {
             // Verifica se a senha não é nula ou vazia
@@ -168,35 +168,34 @@ namespace Service.Implementation
             }
         }
 
-        //Admin methods
+
         public async Task LockUser(int userId)
         {
-            _userRepository.LockUserAsync(userId);
-        }
-        public async Task UnlockUser(int userId)
-        {
-            _userRepository.UnlockUserAsync(userId);
-        }
-        public void ManageUserAccess(int userId, string action)
-        {
-            // Logic to lock or unlock user accounts
-            if (action == "lock")
-                LockUser(userId);
-            else
-                UnlockUser(userId);
+            await _userRepository.LockUserAsync(userId);
         }
 
-        public async Task<UserDto?> AuthenticateAsync(string email, string senha)
+        public async Task UnlockUser(int userId)
+        {
+            await _userRepository.UnlockUserAsync(userId);
+        }
+
+        public async Task<UserDto?> AuthenticateAsync(string email, string password)
         {
             var user = await _userRepository.GetByEmail(email);
             if (user == null)
                 return null;
 
-            bool senhaOk = VerifyPassword(senha, user.Password);
+            bool senhaOk = VerifyPassword(password, user.Password);
             if (!senhaOk)
                 return null;
 
             return UserMapper.ToDto(user);
+        }
+
+        public async Task<IEnumerable<UserDto>> SearchUsersAsync(string name)
+        {
+            var users = await _userRepository.SearchByNameAsync(name);
+            return users.Select(u => UserMapper.ToDto(u));
         }
 
     }
