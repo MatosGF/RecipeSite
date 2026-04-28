@@ -13,7 +13,7 @@ namespace Models.Mappers
             {
                 Id = entity.Id,
                 Name = entity.Name,
-                IsAtive = entity.IsAtive,
+                IsActive = entity.IsActive,
             };
         }
         public static IEnumerable<IngredientDto> ToDtos(IEnumerable<Ingredient> entities)
@@ -31,7 +31,7 @@ namespace Models.Mappers
             return new Ingredient
             {
                 Name = entityDto.Name,
-                IsAtive = entityDto.IsAtive,
+                IsActive = entityDto.IsActive,
             };
         }
 
@@ -41,7 +41,7 @@ namespace Models.Mappers
                 return null;
 
             entity.Name = entityDto.Name;
-            entity.IsAtive = entityDto.IsAtive;
+            entity.IsActive = entityDto.IsActive;
             return entity;
         }
     }

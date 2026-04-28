@@ -1,6 +1,8 @@
-﻿using Models.Entities;
+﻿using Models;
+using Models.Entities;
 
 namespace Models.Mappers
+
 {
     public class RecipeCategoryMapper
     {
@@ -11,12 +13,14 @@ namespace Models.Mappers
 
             return new RecipeCategoryDto
             {
-                Id = entity.Id,
-                CategoryId = entity.CategoryId,
-                Category = entity.Category,
-                IsAtive = entity.IsAtive,
+                Category = entity.Category != null ? new CategoryDto
+                {
+                    Id = entity.Category.Id,
+                    Name = entity.Category.Name
+                } : null
             };
         }
+
         public static IEnumerable<RecipeCategoryDto> ToDtos(IEnumerable<RecipeCategory> entities)
         {
             if (entities == null)
@@ -24,28 +28,37 @@ namespace Models.Mappers
 
             return entities.Select(e => ToDto(e));
         }
-        public static RecipeCategory ToEntityAdd(RecipeCategoryDto entityDto)
+
+        public static RecipeCategory ToEntityAdd(RecipeCategoryDto dto)
         {
-            if (entityDto == null)
+            if (dto == null)
                 return null;
 
             return new RecipeCategory
             {
-                CategoryId = entityDto.CategoryId,
-                Category = entityDto.Category,
-                IsAtive = entityDto.IsAtive,
+                
+                Category = dto.Category != null ? new Category
+                {
+                    Id = dto.Category.Id,
+                    Name = dto.Category.Name
+                } : null
             };
         }
 
-        public static RecipeCategory ToEntityUpdate(RecipeCategoryDto entityDto, RecipeCategory entity)
+        public static RecipeCategory ToEntityUpdate(RecipeCategoryDto dto, RecipeCategory entity)
         {
-            if (entityDto == null)
-                return null;
+            if (dto == null)
+                return entity;
 
-            entity.CategoryId = entityDto.CategoryId;
-            entity.Category = entityDto.Category;
-            entity.IsAtive = entityDto.IsAtive;
+
+            entity.Category = dto.Category != null ? new Category
+            {
+                Id = dto.Category.Id,
+                Name = dto.Category.Name
+            } : null;
+
             return entity;
         }
     }
 }
+

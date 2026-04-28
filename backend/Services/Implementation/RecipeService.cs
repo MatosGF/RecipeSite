@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Models;
+using Models.Dtos;
 using Models.Entities;
 using Models.Mappers;
 using Repository.Interfaces;
@@ -16,16 +17,38 @@ namespace Service.Implementation
             _repository = recipeIngredientRepository ?? throw new ArgumentNullException(nameof(recipeIngredientRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
-        public async Task<RecipeDto> AddAsync(RecipeDto entityDto)
+        public async Task<RecipeDto> AddAsync(CreateRecipeDto dto)
         {
             try
             {
-                var entity = RecipeMapper.ToEntityAdd(entityDto);
-                var entitySaved = await _repository.AddAsync(entity);
+                // converter o DTO de criação em uma entidade Recipe
+                var entity = new Recipe
+                {
+                    Title = dto.Title,
+                    Description = dto.Description,
+                    PreparationTime = dto.PreparationTime,
+                    CategoryId = dto.CategoryId,
+                    DifficultyId = dto.DifficultyId,
+                    UserId = dto.UserId,
+                    ImageUrl = dto.ImageUrl,
+                    Status = "Pending",
+                    IsActive = true,
+                    RecipeIngredients = dto.RecipeIngredients.Select(ri => new RecipeIngredient
+                    {
+                        IngredientId = ri.IngredientId,
+                        MeasurementTypeId = ri.MeasurementTypeId,
+                        Amount = (int)ri.Amount
+                    }).ToList()
+                };
+
+                // salvar no repositório
+                await _repository.AddAsync(entity);
                 await _repository.SaveAsync();
 
-                return RecipeMapper.ToDto(entitySaved);
+                // carregar DTO completo novamente via mapper
+                var dtoFinal = RecipeMapper.ToDto(entity);
 
+                return dtoFinal;
             }
             catch (Exception ex)
             {
@@ -33,30 +56,49 @@ namespace Service.Implementation
                 throw;
             }
         }
-        public async Task<RecipeDto> Update(RecipeDto entityDto)
-        {
-            try
-            {
-                // Buscar o Recipe pelo ID
-                Recipe entity = await _repository.GetByIdAsync(entityDto.Id);
-                if (entity == null)
-                {
-                    throw new InvalidOperationException("Receita não encontrado.");
-                }
-                // Atualizar as informações
-                entity = RecipeMapper.ToEntityUpdate(entityDto, entity);
 
-                // Salvar as alterações no repositório
-                var entityUpdated = await _repository.Update(entity);
-                await _repository.SaveAsync();
-                return RecipeMapper.ToDto(entityUpdated);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Ocorreu um erro ao atualizar dados.");
-                throw;
-            }
+        public async Task<IEnumerable<RecipeDto>> GetApprovedRecipes()
+        {
+            var recipes = await _repository.GetApprovedRecipes();
+            return RecipeMapper.ToDtos(recipes);
         }
+
+
+
+        public async Task<RecipeDto> Update(UpdateRecipeDto dto)
+        {
+            var entity = await _repository.GetByIdWithIngredientsAsync(dto.Id);
+
+            if (entity == null)
+                throw new InvalidOperationException("Receita não encontrada.");
+
+            // Atualiza campos simples
+            entity.Title = dto.Title;
+            entity.Description = dto.Description;
+            entity.PreparationTime = dto.PreparationTime;
+            entity.CategoryId = dto.CategoryId;
+            entity.DifficultyId = dto.DifficultyId;
+            entity.ImageUrl = dto.ImageUrl;
+
+            entity.RecipeIngredients.Clear();
+
+            foreach (var ing in dto.RecipeIngredients)
+            {
+                entity.RecipeIngredients.Add(new RecipeIngredient
+                {
+                    IngredientId = ing.IngredientId,
+                    MeasurementTypeId = ing.MeasurementTypeId,
+                    Amount = (int)ing.Amount
+                });
+            }
+
+            await _repository.Update(entity);
+            await _repository.SaveAsync();
+
+            return RecipeMapper.ToDto(entity);
+        }
+
+
 
         public async Task<RecipeDto> GetById(int entityId)
         {
@@ -76,12 +118,12 @@ namespace Service.Implementation
         {
             try
             {
-                var entity = await _repository.GetAllAsync();
-                return RecipeMapper.ToDtos(entity);
+                var entities = await _repository.GetAllAsync();
+                return RecipeMapper.ToDtos(entities); 
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Lista de receita não encontrada.");
+                _logger.LogError(ex, "Erro ao buscar todas as receitas");
                 throw;
             }
         }
@@ -107,33 +149,39 @@ namespace Service.Implementation
             }
         }
 
-        //public async Task ApproveRecipe(int id)
-        //{
-        //    try
-        //    {
-        //        await _repository.ApproveRecipe(id);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, "Ocorreu um erro ao tentar aprovar receita com ID {{ID}}", id);
-        //        throw;
-        //    }
+        public async Task ApproveRecipe(int id)
+        {
+            try
+            {
+                await _repository.ApproveRecipe(id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ocorreu um erro ao tentar aprovar receita com ID {{ID}}", id);
+                throw;
+            }
 
-        //}
+        }
 
         public async Task<IEnumerable<RecipeDto>> GetPendingRecipes()
         {
             try
             {
                 var recipes = await _repository.GetPendingRecipes();
-                return RecipeMapper.ToDtos(recipes);
+                return RecipeMapper.ToDtos(recipes); 
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Lista de receita pendentes não encontrada.");
+                _logger.LogError(ex, "Erro ao buscar receitas pendentes");
                 throw;
             }
-
         }
+
+        public async Task<IEnumerable<RecipeDto>> SearchRecipes(string? search)
+        {
+            var recipes = await _repository.SearchRecipes(search);
+            return RecipeMapper.ToDtos(recipes);
+        }
+
     }
 }

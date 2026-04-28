@@ -9,5 +9,9 @@ namespace Service.Interfaces
         Task<IEnumerable<RatingDto>> GetAll();
         Task<RatingDto> GetById(int entityId);
         Task<RatingDto> Update(RatingDto entityDto);
+        Task<double> GetAverageByRecipe(int recipeId);
+        Task<RatingDto> AddOrUpdate(RatingDto dto);
+        Task<RatingDto?> GetUserRating(int userId, int recipeId);
+
     }
 }

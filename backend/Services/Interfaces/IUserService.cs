@@ -15,6 +15,6 @@ namespace Service.Interfaces
         Task<UserDto> Update(UserDto user);
         Task<UserDto?> AuthenticateAsync(string email, string pa);
         Task<IEnumerable<UserDto>> SearchUsersAsync(string name);
-
+        Task UpdateProfile(int userId, UserUpdateDto dto);
     }
 }

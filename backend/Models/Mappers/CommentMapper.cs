@@ -15,7 +15,7 @@ namespace Models.Mappers
                 Comments = entity.Comments,
                 RecipeId = entity.RecipeId,
                 UserId = entity.UserId,
-                IsAtive = entity.IsAtive,
+                IsActive = entity.IsActive,
             };
         }
         public static IEnumerable<CommentDto> ToDtos(IEnumerable<Comment> entities)
@@ -35,7 +35,7 @@ namespace Models.Mappers
                 Comments = entityDto.Comments,
                 RecipeId = entityDto.RecipeId,
                 UserId = entityDto.UserId,
-                IsAtive = entityDto.IsAtive,
+                IsActive = entityDto.IsActive,
             };
         }
 
@@ -47,7 +47,7 @@ namespace Models.Mappers
             entity.Comments = entityDto.Comments;
             entity.RecipeId = entityDto.RecipeId;
             entity.UserId = entityDto.UserId;
-            entity.IsAtive = entityDto.IsAtive;
+            entity.IsActive = entityDto.IsActive;
             return entity;
         }
     }

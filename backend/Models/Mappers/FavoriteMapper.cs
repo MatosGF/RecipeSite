@@ -14,7 +14,7 @@ namespace Models.Mappers
                 Id = entity.Id,
                 RecipeId = entity.RecipeId,
                 UserId = entity.UserId,
-                IsAtive = entity.IsAtive,
+                IsActive = entity.IsActive,
             };
         }
         public static IEnumerable<FavoriteDto> ToDtos(IEnumerable<Favorite> entities)
@@ -33,7 +33,7 @@ namespace Models.Mappers
             {
                 RecipeId = entityDto.RecipeId,
                 UserId = entityDto.UserId,
-                IsAtive = entityDto.IsAtive,
+                IsActive = entityDto.IsActive,
             };
         }
 
@@ -44,7 +44,7 @@ namespace Models.Mappers
 
             entity.RecipeId = entityDto.RecipeId;
             entity.UserId = entityDto.UserId;
-            entity.IsAtive = entityDto.IsAtive;
+            entity.IsActive = entityDto.IsActive;
             return entity;
         }
     }

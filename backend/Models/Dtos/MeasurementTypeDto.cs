@@ -4,6 +4,6 @@ namespace Models
 {
     public class MeasurementTypeDto : BaseModel
     {
-        public string Measurement { get; set; }
+        public string Name { get; set; }
     }
 }

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using Service.Interfaces;
@@ -120,5 +121,21 @@ namespace API.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
+
+        [HttpGet("search")]
+        public async Task<ActionResult<IEnumerable<IngredientDto>>> Search(string name)
+        {
+            try
+            {
+                var items = await _service.SearchByName(name);
+                return Ok(items);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao buscar ingredientes");
+                return StatusCode(500, "Erro interno");
+            }
+        }
+
     }
 }

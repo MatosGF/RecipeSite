@@ -1,71 +1,169 @@
-﻿using Models.Entities;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Models;
+using Models.Dtos;
+using Models.Entities;
 
-namespace Models.Mappers
+public static class RecipeMapper
 {
-    public class RecipeMapper
+    // Entity -> DTO (para leitura)
+    public static RecipeDto ToDto(Recipe entity)
     {
-        public static RecipeDto ToDto(Recipe entity)
-        {
-            if (entity == null)
-                return null;
+        if (entity == null) return null;
 
-            return new RecipeDto
+        return new RecipeDto
+        {
+            Id = entity.Id,
+            Title = entity.Title,
+            Description = entity.Description,
+            PreparationTime = entity.PreparationTime,
+            CategoryId = entity.CategoryId,
+            DifficultyId = entity.DifficultyId,
+            UserId = entity.UserId,
+            IsActive = entity.IsActive,
+            Status = entity.Status,
+            ImageUrl = entity.ImageUrl,
+
+            Category = entity.Category != null
+                ? new CategoryDto { Id = entity.Category.Id, Name = entity.Category.Name }
+                : null,
+
+            Difficulty = entity.Difficulty != null
+                ? new DifficultyDto { Id = entity.Difficulty.Id, Name = entity.Difficulty.Name }
+                : null,
+
+            User = entity.User != null
+                ? new UserDto { Id = entity.User.Id, Name = entity.User.Name, Email = entity.User.Email }
+                : null,
+
+            AverageRating = (double)(entity.Ratings != null && entity.Ratings.Any()
+                ? Math.Round(entity.Ratings.Average(r => r.RatingValue), 1)
+                : 0),
+
+            RatingsCount = entity.Ratings?.Count ?? 0,
+
+            RecipeIngredients = entity.RecipeIngredients != null
+                ? entity.RecipeIngredients.Select(ri => new RecipeIngredientDto
+                {
+                    Id = ri.Id,
+                    Amount = ri.Amount,
+                    IngredientId = ri.IngredientId,
+                    MeasurementTypeId = ri.MeasurementTypeId,
+
+                    Ingredient = ri.Ingredient != null
+                        ? new IngredientDto
+                        {
+                            Id = ri.Ingredient.Id,
+                            Name = ri.Ingredient.Name
+                        }
+                        : null,
+
+                    MeasurementType = ri.MeasurementType != null
+                        ? new MeasurementTypeDto
+                        {
+                            Id = ri.MeasurementType.Id,
+                            Name = ri.MeasurementType.Name
+                        }
+                        : null
+                }).ToList()
+                : new List<RecipeIngredientDto>()
+        };
+    }
+
+
+    // DTO -> Entity (usado em update via RecipeDto)
+    public static Recipe ToEntityAdd(RecipeDto dto)
+    {
+        if (dto == null) return null;
+
+        return new Recipe
+        {
+            Id = dto.Id,
+            Title = dto.Title,
+            Description = dto.Description,
+            CategoryId = dto.CategoryId,
+            DifficultyId = dto.DifficultyId,
+            PreparationTime = dto.PreparationTime,
+            UserId = dto.UserId,
+            IsActive = dto.IsActive,
+            Status = dto.Status ?? "Pending",
+            ImageUrl = dto.ImageUrl,
+            RecipeIngredients = dto.RecipeIngredients?.Select(ri => new RecipeIngredient
             {
-                Id = entity.Id,
-                Description = entity.Description,
-                Category = entity.Category,
-                CategoryId = entity.CategoryId,
-                Difficulty = entity.Difficulty,
-                DifficultyId = entity.DifficultyId,
-                PreparationTime = entity.PreparationTime,
-                Title = entity.Title,
-                User = entity.User,
-                UserId = entity.UserId,
-                IsAtive = entity.IsAtive,
-            };
-        }
-        public static IEnumerable<RecipeDto> ToDtos(IEnumerable<Recipe> entities)
-        {
-            if (entities == null)
-                return Enumerable.Empty<RecipeDto>();
+                IngredientId = ri.IngredientId,
+                MeasurementTypeId = ri.MeasurementTypeId,
+                Amount = ri.Amount
+            }).ToList()
+        };
+    }
 
-            return entities.Select(e => ToDto(e));
-        }
-        public static Recipe ToEntityAdd(RecipeDto entityDto)
-        {
-            if (entityDto == null)
-                return null;
+    // DTO de update -> atualiza entity existente
+    public static Recipe ToEntityUpdate(RecipeDto dto, Recipe entity)
+    {
+        if (dto == null) return entity;
 
-            return new Recipe
+        entity.Title = dto.Title;
+        entity.Description = dto.Description;
+        entity.CategoryId = dto.CategoryId;
+        entity.DifficultyId = dto.DifficultyId;
+        entity.PreparationTime = dto.PreparationTime;
+        entity.ImageUrl = dto.ImageUrl;
+        entity.Status = dto.Status;
+        entity.IsActive = dto.IsActive;
+
+        if (dto.RecipeIngredients != null)
+        {
+            entity.RecipeIngredients.Clear();
+
+            foreach (var ri in dto.RecipeIngredients)
             {
-                Description = entityDto.Description,
-                Category = entityDto.Category,
-                CategoryId = entityDto.CategoryId,
-                Difficulty = entityDto.Difficulty,
-                DifficultyId = entityDto.DifficultyId,
-                PreparationTime = entityDto.PreparationTime,
-                Title = entityDto.Title,
-                User = entityDto.User,
-                UserId = entityDto.UserId,
-                IsAtive = entityDto.IsAtive,
-            };
+                entity.RecipeIngredients.Add(new RecipeIngredient
+                {
+                    IngredientId = ri.IngredientId,
+                    MeasurementTypeId = ri.MeasurementTypeId,
+                    Amount = ri.Amount
+                });
+            }
         }
-        public static Recipe ToEntityUpdate(RecipeDto entityDto, Recipe entity)
-        {
-            if (entityDto == null)
-                return null;
 
-            entity.Description = entityDto.Description;
-            entity.Category = entityDto.Category;
-            entity.CategoryId = entityDto.CategoryId;
-            entity.Difficulty = entityDto.Difficulty;
-            entity.DifficultyId = entityDto.DifficultyId;
-            entity.PreparationTime = entityDto.PreparationTime;
-            entity.Title = entityDto.Title;
-            entity.User = entityDto.User;
-            entity.UserId = entityDto.UserId;
-            entity.IsAtive = entityDto.IsAtive;
-            return entity;
-        }
+        return entity;
+    }
+
+
+    // Lista de entities -> lista de DTOs
+    public static IEnumerable<RecipeDto> ToDtos(IEnumerable<Recipe> entities)
+    {
+        if (entities == null)
+            return Enumerable.Empty<RecipeDto>();
+
+        return entities.Select(ToDto);
+    }
+
+
+
+    // CreateRecipeDto -> Recipe (usado na criação)
+    public static Recipe ToEntityAdd(CreateRecipeDto dto)
+    {
+        if (dto == null) return null;
+
+        return new Recipe
+        {
+            Title = dto.Title,
+            Description = dto.Description,
+            PreparationTime = dto.PreparationTime,
+            CategoryId = dto.CategoryId,
+            DifficultyId = dto.DifficultyId,
+            UserId = dto.UserId, // controller deve preencher a partir do token
+            Status = dto.Status ?? "Pending",
+            ImageUrl = dto.ImageUrl,
+            RecipeIngredients = dto.RecipeIngredients?.Select(ri => new RecipeIngredient
+            {
+                IngredientId = ri.IngredientId,
+                MeasurementTypeId = ri.MeasurementTypeId,
+                Amount = Convert.ToInt32(ri.Amount)
+            }).ToList()
+        };
     }
 }
+

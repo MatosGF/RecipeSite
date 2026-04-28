@@ -10,6 +10,5 @@ namespace Models
         public int RecipeId { get; set; }
         public MeasurementTypeDto MeasurementType { get; set; }
         public IngredientDto Ingredient { get; set; }
-        public RecipeDto Recipe { get; set; }
     }
 }

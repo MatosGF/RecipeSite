@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using Service.Interfaces;
@@ -17,58 +18,49 @@ namespace API.Controllers
             _service = service;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<FavoriteDto>>> GetAll()
+
+        [Authorize]
+        [HttpGet("is-favorite/{recipeId}")]
+        public async Task<ActionResult<bool>> IsFavorite(int recipeId)
         {
-            try
-            {
-                var items = await _service.GetAll();
-                return Ok(items);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error retrieving all FavoriteDtos");
-                return StatusCode(500, "Internal server error");
-            }
+            var userIdClaim = User.FindFirst("userId");
+
+            if (userIdClaim == null)
+                return Unauthorized();
+
+            var userId = int.Parse(userIdClaim.Value);
+
+            return Ok(await _service.IsFavorite(userId, recipeId));
         }
 
-        [HttpGet("GetById")]
-        public async Task<ActionResult<FavoriteDto>> GetById(int id)
+
+        [Authorize]
+        [HttpGet("my")]
+        public async Task<IActionResult> MyFavorites()
         {
-            try
+            var claim = User.FindFirst("userId")?.Value;
+
+            return Ok(new
             {
-                var item = await _service.GetById(id);
-                if (item == null)
-                {
-                    return NotFound();
-                }
-                return Ok(item);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error retrieving FavoriteDto with ID {{Id}}", id);
-                return StatusCode(500, "Internal server error");
-            }
+                tokenUserId = claim,
+                favorites = await _service.GetMyFavorites(int.Parse(claim))
+            });
         }
 
-        [HttpPost]
-        public async Task<ActionResult<FavoriteDto>> Create(FavoriteDto item, CancellationToken cancellationToken)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
 
-                var createdItem = await _service.AddAsync(item);
-                return CreatedAtAction(nameof(GetById), new { id = createdItem.Id }, createdItem);
-            }
-            catch (Exception ex)
+        [Authorize]
+        [HttpPost("toggle/{recipeId}")]
+        public async Task<IActionResult> Toggle(int recipeId)
+        {
+            var userId = int.Parse(User.FindFirst("userId")!.Value);
+
+            var added = await _service.Toggle(userId, recipeId);
+
+            return Ok(new
             {
-                _logger.LogError(ex, "Error creating FavoriteDto");
-                return StatusCode(500, "Internal server error");
-            }
+                success = true,
+                isFavorite = added
+            });
         }
 
         [HttpPut]

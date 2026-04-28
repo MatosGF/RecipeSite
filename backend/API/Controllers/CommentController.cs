@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using Service.Interfaces;
@@ -31,45 +32,23 @@ namespace API.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
-
-        [HttpGet("GetById")]
-        public async Task<ActionResult<CommentDto>> GetById(int id)
+        [HttpGet("recipe/{recipeId}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetByRecipe(int recipeId)
         {
-            try
-            {
-                var item = await _service.GetById(id);
-                if (item == null)
-                {
-                    return NotFound();
-                }
-                return Ok(item);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error retrieving CommentDto with ID {{Id}}", id);
-                return StatusCode(500, "Internal server error");
-            }
+            var result = await _service.GetByRecipe(recipeId);
+            return Ok(result);
         }
 
         [HttpPost]
-        public async Task<ActionResult<CommentDto>> Create(CommentDto item, CancellationToken cancellationToken)
+        [Authorize]
+        public async Task<IActionResult> Create([FromBody] CommentCreateDto dto)
         {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                var createdItem = await _service.AddAsync(item);
-                return CreatedAtAction(nameof(GetById), new { id = createdItem.Id }, createdItem);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error creating CommentDto");
-                return StatusCode(500, "Internal server error");
-            }
+            var userId = int.Parse(User.Claims.First(c => c.Type == "userId").Value);
+            await _service.Create(dto, userId);
+            return Ok();
         }
+
 
         [HttpPut]
         public async Task<IActionResult> Update(int id, CommentDto item)

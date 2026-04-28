@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Models;
+using Models.Dtos;
 using Models.Entities;
 using Models.Mappers;
 using Repository.Interfaces;
@@ -196,6 +197,20 @@ namespace Service.Implementation
         {
             var users = await _userRepository.SearchByNameAsync(name);
             return users.Select(u => UserMapper.ToDto(u));
+        }
+
+        public async Task UpdateProfile(int userId, UserUpdateDto dto)
+        {
+            var user = await _userRepository.GetByIdAsync(userId);
+
+            user.Name = dto.Name;
+            user.LastName = dto.LastName;
+            user.Phone = dto.Phone;
+            user.Location = dto.Location;
+            user.BirthDate = dto.BirthDate;
+
+            await _userRepository.Update(user);
+            await _userRepository.SaveAsync();
         }
 
     }

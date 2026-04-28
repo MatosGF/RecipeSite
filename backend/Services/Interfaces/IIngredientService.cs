@@ -9,5 +9,6 @@ namespace Service.Interfaces
         Task<IEnumerable<IngredientDto>> GetAll();
         Task<IngredientDto> GetById(int entityId);
         Task<IngredientDto> Update(IngredientDto entityDto);
+        Task<IEnumerable<IngredientDto>> SearchByName(string name);
     }
 }

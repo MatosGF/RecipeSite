@@ -9,5 +9,7 @@ namespace Service.Interfaces
         Task<IEnumerable<CommentDto>> GetAll();
         Task<CommentDto> GetById(int entityId);
         Task<CommentDto> Update(CommentDto entityDto);
+        Task<IEnumerable<CommentDto>> GetByRecipe(int recipeId);
+        Task Create(CommentCreateDto dto, int userId);
     }
 }

@@ -33,6 +33,19 @@ namespace Service.Implementation
                 throw;
             }
         }
+
+        public async Task<double> GetAverageByRecipe(int recipeId)
+        {
+            var ratings = await _repository.GetAllAsync();
+
+            var recipeRatings = ratings.Where(r => r.RecipeId == recipeId).ToList();
+
+            if (!recipeRatings.Any())
+                return 0;
+
+            return (double)Math.Round(recipeRatings.Average(r => r.RatingValue), 1);
+        }
+
         public async Task<RatingDto> Update(RatingDto entityDto)
         {
             try
@@ -105,6 +118,41 @@ namespace Service.Implementation
                 _logger.LogError(ex, "Ocorreu um erro ao tentar deletar avaliação com ID {{ID}}", id);
                 throw;
             }
+        }
+
+        public async Task<RatingDto?> GetUserRating(int userId, int recipeId)
+        {
+            var rating = await _repository.GetByUserAndRecipe(userId, recipeId);
+
+            if (rating == null)
+                return null;
+
+            return RatingMapper.ToDto(rating);
+        }
+
+
+
+        public async Task<RatingDto> AddOrUpdate(RatingDto dto)
+        {
+            var existing = await _repository.GetByUserAndRecipe(dto.UserId, dto.RecipeId);
+
+            if (existing == null)
+            {
+                // criar nova avaliação
+                var entity = RatingMapper.ToEntityAdd(dto);
+                var saved = await _repository.AddAsync(entity);
+                await _repository.SaveAsync();
+
+                return RatingMapper.ToDto(saved);
+            }
+
+            // atualizar avaliação existente
+            existing.RatingValue = dto.RatingValue;
+
+            var updated = await _repository.Update(existing);
+            await _repository.SaveAsync();
+
+            return RatingMapper.ToDto(updated);
         }
 
     }

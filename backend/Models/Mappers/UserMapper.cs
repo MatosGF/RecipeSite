@@ -13,58 +13,58 @@ namespace Models.Mappers
             {
                 Id = entity.Id,
                 Name = entity.Name,
+                LastName = entity.LastName,
+                Phone = entity.Phone,
+                Location = entity.Location,
+                BirthDate = entity.BirthDate,
                 Email = entity.Email,
-                Favorites = entity.Favorites,
                 IsAdmin = entity.IsAdmin,
-                IsAtive = entity.IsAtive,
                 IsBlocked = entity.IsBlocked,
                 IsRegistered = entity.IsRegistered,
-                Recipes = entity.Recipes,
+                IsActive = entity.IsActive
             };
         }
+
 
         public static IEnumerable<UserDto> ToDto(IEnumerable<User> entities)
         {
             if (entities == null)
                 return Enumerable.Empty<UserDto>();
 
-            return entities.Select(e => ToDto(e));
+            return entities.Select(ToDto);
         }
 
-        public static User ToEntityAdd(UserDto entityDto)
+        public static User ToEntityAdd(UserDto dto)
         {
-            if (entityDto == null)
+            if (dto == null)
                 return null;
 
             return new User
             {
-                Name = entityDto.Name,
-                Email = entityDto.Email,
-                Favorites = entityDto.Favorites,
-                IsAdmin = entityDto.IsAdmin,
-                IsAtive = entityDto.IsAtive,
-                IsBlocked = entityDto.IsBlocked,
-                IsRegistered = entityDto.IsRegistered,
-                Recipes = entityDto.Recipes,
+                Name = dto.Name,
+                Email = dto.Email,
+                IsAdmin = dto.IsAdmin,
+                IsBlocked = dto.IsBlocked,
+                IsRegistered = dto.IsRegistered,
+                IsActive = dto.IsActive
+                // Password será tratada no Service (hash)
             };
         }
 
-        public static User ToEntityUpdate(UserDto entityDto, User entity)
+        public static User ToEntityUpdate(UserDto dto, User entity)
         {
-            if (entityDto == null)
-                return null;
+            if (dto == null || entity == null)
+                return entity;
 
-            entity.Name = entityDto.Name;
-            entity.Email = entityDto.Email;
-            entity.Favorites = entityDto.Favorites;
-            entity.IsAdmin = entityDto.IsAdmin;
-            entity.IsAtive = entityDto.IsAtive;
-            entity.IsBlocked = entityDto.IsBlocked;
-            entity.IsRegistered = entityDto.IsRegistered;
-            entity.Recipes = entityDto.Recipes;
+            entity.Name = dto.Name;
+            entity.Email = dto.Email;
+            entity.IsAdmin = dto.IsAdmin;
+            entity.IsBlocked = dto.IsBlocked;
+            entity.IsRegistered = dto.IsRegistered;
+            entity.IsActive = dto.IsActive;
+
             return entity;
         }
     }
-
-
 }
+

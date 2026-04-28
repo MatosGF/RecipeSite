@@ -18,7 +18,7 @@ namespace Repository.Implementation
             var user = await _context.FindAsync<User>(userId);
             if (user != null)
             {
-                user.IsBlocked = true; // ALTEREI para isBlocked
+                user.IsBlocked = true; 
                 await _context.SaveChangesAsync();
             }
         }
@@ -28,7 +28,7 @@ namespace Repository.Implementation
             var user = await _context.FindAsync<User>(userId);
             if (user != null)
             {
-                user.IsBlocked = false; // ALTEREI para isBlocked
+                user.IsBlocked = false; 
                 await _context.SaveChangesAsync();
             }
         }
@@ -52,9 +52,6 @@ namespace Repository.Implementation
                 .Where(u => u.Name.Contains(name))
                 .ToListAsync();
         }
-
-
     }
-
 }
 

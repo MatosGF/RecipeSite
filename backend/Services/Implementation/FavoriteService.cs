@@ -111,5 +111,47 @@ namespace Service.Implementation
             }
         }
 
+        public async Task<bool> Toggle(int userId, int recipeId)
+        {
+            var favorite = await _repository.GetByUserAndRecipe(userId, recipeId);
+
+            if (favorite == null)
+            {
+                await _repository.AddAsync(new Favorite
+                {
+                    UserId = userId,
+                    RecipeId = recipeId,
+                    IsActive = true
+                });
+
+                await _repository.SaveAsync();
+                return true; // favoritou
+            }
+
+            _repository.Delete(favorite);
+            await _repository.SaveAsync();
+            return false; // desfavoritou
+        }
+
+        public async Task<bool> IsFavorite(int userId, int recipeId)
+        {
+            return await _repository.GetByUserAndRecipe(userId, recipeId) != null;
+        }
+
+        public async Task<IEnumerable<FavoriteRecipeDto>> GetMyFavorites(int userId)
+        {
+            var favorites = await _repository.GetByUserId(userId);
+
+            return favorites.Select(f => new FavoriteRecipeDto
+            {
+                RecipeId = f.RecipeId,
+                Title = f.Recipe.Title,
+                ImageUrl = f.Recipe.ImageUrl,
+                AverageRating = (double)(f.Recipe.Ratings.Any()
+                    ? Math.Round(f.Recipe.Ratings.Average(r => r.RatingValue), 1)
+                    : 0)
+            });
+        }
+
     }
 }

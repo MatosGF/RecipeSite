@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using Service.Interfaces;
@@ -51,25 +52,37 @@ namespace API.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<ActionResult<RatingDto>> Create(RatingDto item, CancellationToken cancellationToken)
+        [HttpGet("recipe/{recipeId}/average")]
+        [AllowAnonymous]
+        public async Task<ActionResult<double>> GetAverageByRecipe(int recipeId)
         {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                var createdItem = await _service.AddAsync(item);
-                return CreatedAtAction(nameof(GetById), new { id = createdItem.Id }, createdItem);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error creating RatingDto");
-                return StatusCode(500, "Internal server error");
-            }
+            var average = await _service.GetAverageByRecipe(recipeId);
+            return Ok(average);
         }
+
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] RatingDto dto)
+        {
+            var userId = int.Parse(User.FindFirst("userId")!.Value);
+            dto.UserId = userId;
+
+            var result = await _service.AddOrUpdate(dto);
+            return Ok(result);
+        }
+
+        [Authorize]
+        [HttpGet("recipe/{recipeId}/my")]
+        public async Task<IActionResult> GetMyRating(int recipeId)
+        {
+            var userId = int.Parse(User.FindFirst("userId")!.Value);
+
+            var rating = await _service.GetUserRating(userId, recipeId);
+
+            return Ok(rating);
+        }
+
 
         [HttpPut]
         public async Task<IActionResult> Update(int id, RatingDto item)

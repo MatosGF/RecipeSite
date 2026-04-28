@@ -5,12 +5,12 @@ namespace Repository
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
-        protected readonly DbContext _context;
+        protected readonly DbContextRecipe _context;
         protected readonly DbSet<T> _dbSet;
 
         public GenericRepository(DbContextRecipe context)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _context = context;
             _dbSet = context.Set<T>();
         }
 

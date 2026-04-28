@@ -15,7 +15,7 @@ namespace Models.Mappers
                 RatingValue = entity.RatingValue,
                 RecipeId = entity.RecipeId,
                 UserId = entity.UserId,
-                IsAtive = entity.IsAtive,
+                IsActive = entity.IsActive,
             };
         }
         public static IEnumerable<RatingDto> ToDtos(IEnumerable<Rating> entities)
@@ -35,7 +35,7 @@ namespace Models.Mappers
                 RatingValue = entityDto.RatingValue,
                 RecipeId = entityDto.RecipeId,
                 UserId = entityDto.UserId,
-                IsAtive = entityDto.IsAtive,
+                IsActive = entityDto.IsActive,
             };
         }
 
@@ -47,7 +47,7 @@ namespace Models.Mappers
             entity.RatingValue = entityDto.RatingValue;
             entity.RecipeId = entityDto.RecipeId;
             entity.UserId = entityDto.UserId;
-            entity.IsAtive = entityDto.IsAtive;
+            entity.IsActive = entityDto.IsActive;
             return entity;
         }
     }

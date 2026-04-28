@@ -107,5 +107,11 @@ namespace Service.Implementation
                 throw;
             }
         }
+
+        public async Task<IEnumerable<IngredientDto>> SearchByName(string name)
+        {
+            var items = await _repository.SearchByName(name);
+            return IngredientMapper.ToDtos(items);
+        }
     }
 }

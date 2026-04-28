@@ -12,8 +12,8 @@ namespace Models.Mappers
             return new MeasurementTypeDto
             {
                 Id = entity.Id,
-                Measurement = entity.Measurement,
-                IsAtive = entity.IsAtive,
+                Name = entity.Name,
+                IsActive = entity.IsActive,
             };
         }
         public static IEnumerable<MeasurementTypeDto> ToDtos(IEnumerable<MeasurementType> entities)
@@ -30,8 +30,8 @@ namespace Models.Mappers
 
             return new MeasurementType
             {
-                Measurement = entityDto.Measurement,
-                IsAtive = entityDto.IsAtive,
+                Name = entityDto.Name,
+                IsActive = entityDto.IsActive,
             };
         }
 
@@ -40,8 +40,8 @@ namespace Models.Mappers
             if (entityDto == null)
                 return null;
 
-            entity.Measurement = entityDto.Measurement;
-            entity.IsAtive = entityDto.IsAtive;
+            entity.Name = entityDto.Name;
+            entity.IsActive = entityDto.IsActive;
             return entity;
         }
     }

@@ -5,7 +5,11 @@ namespace Repository.Interfaces
 {
     public interface IRecipeRepository : IGenericRepository<Recipe>
     {
-        //Task ApproveRecipe(int recipeId);
         Task<IEnumerable<Recipe>> GetPendingRecipes();
+        Task ApproveRecipe(int recipeId);
+        Task<Recipe> GetByIdWithIngredientsAsync(int id);
+        Task<IEnumerable<Recipe>> GetApprovedRecipes();
+        Task<IEnumerable<Recipe>> SearchRecipes(string? search);
+
     }
 }

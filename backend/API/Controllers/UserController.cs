@@ -1,7 +1,9 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Models;
+using Models.Dtos;
 using Service.Implementation;
 using Service.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
@@ -185,27 +187,24 @@ namespace API.Controllers
             }));
         }
 
+        [HttpGet("me")]
+        [Authorize]
+        public async Task<IActionResult> GetMe()
+        {
+            var userId = int.Parse(User.FindFirst("userId")!.Value);
+            var user = await _service.GetById(userId);
+            return Ok(user);
+        }
+
+        [HttpPut("me")]
+        [Authorize]
+        public async Task<IActionResult> UpdateMe(UserUpdateDto dto)
+        {
+            var userId = int.Parse(User.FindFirst("userId")!.Value);
+            await _service.UpdateProfile(userId, dto);
+            return NoContent();
+        }
 
 
-
-        //[HttpDelete]
-        //public async Task<IActionResult> Delete(int id)
-        //{
-        //    try
-        //    {
-        //        var deleted = await _service.(id);
-        //        if (!deleted)
-        //        {
-        //            return NotFound();
-        //        }
-
-        //        return NoContent();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, "Error deleting UserDto with ID {{Id}}", id);
-        //        return StatusCode(500, "Internal server error");
-        //    }
-        //}
     }
 }

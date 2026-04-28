@@ -36,6 +36,34 @@ namespace Service.Implementation
             }
         }
 
+        public async Task Create(CommentCreateDto dto, int userId)
+        {
+            var comment = new Comment
+            {
+                Comments = dto.Comments,
+                RecipeId = dto.RecipeId,
+                UserId = userId,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            await _repository.AddAsync(comment);
+            await _repository.SaveAsync();
+        }
+
+
+        public async Task<IEnumerable<CommentDto>> GetByRecipe(int recipeId)
+        {
+            var comments = await _repository.GetByRecipeIdAsync(recipeId);
+
+            return comments.Select(c => new CommentDto
+            {
+                Id = c.Id,
+                Comments = c.Comments,
+                UserName = c.User.Name,
+                CreatedAt = c.CreatedAt
+            });
+        }
+
         public async Task<CommentDto> Update(CommentDto entityDto)
         {
             try

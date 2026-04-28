@@ -25,13 +25,30 @@ namespace Repository.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // There's a chance for you to need to define some FK, PK , essas cenas de DB
-            // If so, ask for help at "" INTERNET "" (if you know what I mean)
+            // Relacionamento Recipe -> RecipeIngredient
+            modelBuilder.Entity<Recipe>()
+                .HasMany(r => r.RecipeIngredients)
+                .WithOne(ri => ri.Recipe)
+                .HasForeignKey(ri => ri.RecipeId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            //InitialLoadData.Seed(modelBuilder);
+            // Relacionamento Ingredient -> RecipeIngredient
+            modelBuilder.Entity<Ingredient>()
+                .HasMany<RecipeIngredient>()
+                .WithOne(ri => ri.Ingredient)
+                .HasForeignKey(ri => ri.IngredientId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Relacionamento MeasurementType -> RecipeIngredient
+            modelBuilder.Entity<MeasurementType>()
+                .HasMany<RecipeIngredient>()
+                .WithOne(ri => ri.MeasurementType)
+                .HasForeignKey(ri => ri.MeasurementTypeId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(modelBuilder);
         }
+
 
     }
 }

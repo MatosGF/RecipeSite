@@ -1,4 +1,5 @@
-﻿using Models.Entities;
+﻿using Models;
+using Models.Entities;
 
 namespace Models.Mappers
 {
@@ -13,54 +14,64 @@ namespace Models.Mappers
             {
                 Id = entity.Id,
                 Amount = entity.Amount,
-                Ingredient = entity.Ingredient,
                 IngredientId = entity.IngredientId,
-                MeasurementType = entity.MeasurementType,
                 MeasurementTypeId = entity.MeasurementTypeId,
-                RecipeId = entity.RecipeId,
-                Recipe = entity.Recipe,
-                IsAtive = entity.IsAtive,
+                IsActive = entity.IsActive,
+
+                Ingredient = entity.Ingredient != null
+                    ? new IngredientDto
+                    {
+                        Id = entity.Ingredient.Id,
+                        Name = entity.Ingredient.Name
+                    }
+                    : null,
+
+                MeasurementType = entity.MeasurementType != null
+                    ? new MeasurementTypeDto
+                    {
+                        Id = entity.MeasurementType.Id,
+                        Name = entity.MeasurementType.Name
+                    }
+                    : null
             };
         }
+
         public static IEnumerable<RecipeIngredientDto> ToDtos(IEnumerable<RecipeIngredient> entities)
         {
             if (entities == null)
                 return Enumerable.Empty<RecipeIngredientDto>();
 
-            return entities.Select(e => ToDto(e));
+            return entities.Select(ToDto);
         }
-        public static RecipeIngredient ToEntityAdd(RecipeIngredientDto entityDto)
+
+        public static RecipeIngredient ToEntityAdd(RecipeIngredientDto dto)
         {
-            if (entityDto == null)
+            if (dto == null)
                 return null;
 
             return new RecipeIngredient
             {
-                Amount = entityDto.Amount,
-                Ingredient = entityDto.Ingredient,
-                IngredientId = entityDto.IngredientId,
-                MeasurementType = entityDto.MeasurementType,
-                IsAtive = entityDto.IsAtive,
-                MeasurementTypeId = entityDto.MeasurementTypeId,
-                RecipeId = entityDto.RecipeId,
-                Recipe = entityDto.Recipe,
+                Amount = dto.Amount,
+                IngredientId = dto.IngredientId,
+                MeasurementTypeId = dto.MeasurementTypeId,
+                IsActive = dto.IsActive
+                // ❌ NÃO seta Recipe aqui
             };
         }
 
-        public static RecipeIngredient ToEntityUpdate(RecipeIngredientDto entityDto, RecipeIngredient entity)
+        public static RecipeIngredient ToEntityUpdate(RecipeIngredientDto dto, RecipeIngredient entity)
         {
-            if (entityDto == null)
-                return null;
+            if (dto == null)
+                return entity;
 
-            entity.Amount = entityDto.Amount;
-            entity.Ingredient = entityDto.Ingredient;
-            entity.IngredientId = entityDto.IngredientId;
-            entity.MeasurementType = entityDto.MeasurementType;
-            entity.IsAtive = entityDto.IsAtive;
-            entity.MeasurementTypeId = entityDto.MeasurementTypeId;
-            entity.RecipeId = entityDto.RecipeId;
-            entity.Recipe = entityDto.Recipe;
+            entity.Amount = dto.Amount;
+            entity.IngredientId = dto.IngredientId;
+            entity.MeasurementTypeId = dto.MeasurementTypeId;
+            entity.IsActive = dto.IsActive;
+
             return entity;
         }
     }
 }
+
+
