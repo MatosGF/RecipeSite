@@ -1,0 +1,17 @@
+<section class="section-block">
+  <h3>Informações Pessoais</h3>
+
+  <form [formGroup]="form">
+
+    <input formControlName="name" placeholder="Nome" />
+    <input formControlName="lastName" placeholder="Sobrenome" />
+    <input formControlName="phone" placeholder="Telefone" />
+    <input formControlName="location" placeholder="Localidade" />
+    <input type="date" formControlName="birthDate" />
+    <input formControlName="email" placeholder="Email" disable />
+
+    <button *ngIf="!editMode" type="button" (click)="editar()">Editar</button>
+    <button *ngIf="editMode" type="button" (click)="salvar()">Salvar</button>
+
+  </form>
+</section>

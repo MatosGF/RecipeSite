@@ -1,0 +1,30 @@
+<div class="home-recipes">
+
+  <div
+    class="home-recipe-card"
+    *ngFor="let receita of receitas"
+    [routerLink]="['/recipe', receita.id]"
+  >
+    <div class="image-wrapper">
+      <img
+        [src]="receita.imageUrl || 'assets/no-image.jpg'"
+        alt="Imagem da receita"
+      />
+    </div>
+
+    <h3>{{ receita.title }}</h3>
+
+    <!-- ESTRELAS -->
+    <div class="stars-container">
+      <div class="stars-back">★★★★★</div>
+      <div
+        class="stars-front"
+        [style.width.%]="(receita.averageRating / 5) * 100"
+      >
+        ★★★★★
+      </div>
+    </div>
+  </div>
+</div>
+
+

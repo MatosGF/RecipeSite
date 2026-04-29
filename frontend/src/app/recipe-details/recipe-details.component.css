@@ -1,0 +1,226 @@
+/* PADRONIZAÇÃO GLOBAL DE FONTES E TEXTOS */
+
+body {
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+p,
+li,
+.comment-text,
+.rating-number,
+.login-hint,
+.login-warning {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: darkolivegreen;
+  line-height: 1.6;
+}
+
+h1,
+h3,
+h4,
+.comment-author {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: darkolivegreen;
+  font-weight: 600;
+}
+
+/* TÍTULOS E TEXTOS GERAIS */
+
+p,
+h2,
+h3,
+h4,
+li {
+  color: darkolivegreen;
+}
+
+h2 {
+  font-size: 1.2rem;
+}
+
+
+/* AVALIAÇÃO (ESTRELAS) */
+
+.rating-box {
+  margin-top: 30px;
+  font-size: 1.6rem;
+  color: #ccc;
+}
+
+.rating-box span {
+  cursor: pointer;
+  transition: color 0.2s;
+  font-size: 1.8rem;
+  color: #ccc;
+}
+
+.rating-box span.filled {
+  color: #f4b400;
+}
+
+.login-hint {
+  font-size: 0.9rem;
+  color: #777;
+}
+
+.stars {
+  display: flex;
+  gap: 4px;
+  font-size: 1.4rem;
+  color: #ccc;
+  margin-bottom: 0.5rem;
+}
+
+.star {
+  position: relative;
+  font-size: 1.6rem;
+  color: #ddd;
+}
+
+.star-back {
+  color: #ddd;
+}
+
+.star-front {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: hidden;
+  color: #f4b400;
+  width: 0%;
+  pointer-events: none;
+}
+
+.stars .filled {
+  color: #f4b400;
+}
+
+.rating-number {
+  font-size: 0.9rem;
+  margin-left: 0.5rem;
+  color: #666;
+}
+
+.stars.readonly span {
+  cursor: default;
+}
+
+/* CABEÇALHO DA RECEITA */
+
+.recipe-header {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.image-wrapper {
+  width: 33%;
+}
+
+.image-wrapper img {
+  width: 100%;
+  height: 500px;
+  object-fit: cover;
+}
+
+.info-wrapper {
+  flex: 1;
+}
+
+.info-wrapper h1 {
+  margin-top: 0;
+  color: darkolivegreen;
+}
+
+/* FAVORITOS */
+
+.favorite-btn {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #ccc;
+  cursor: pointer;
+  padding: 0;
+  margin: 0.5rem 0;
+}
+
+.favorite-btn.active {
+  color: #e53935;
+}
+
+.favorite-btn:hover {
+  transform: scale(1.1);
+}
+
+.favorite-rating {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+/* COMENTÁRIOS */
+
+.comments-section {
+  max-width: 700px;
+  margin-top: 7rem;
+}
+
+.comments-section h3 {
+  font-size: 1.4rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  color: darkolivegreen;
+}
+
+.comment-box {
+  display: flex;
+  flex-direction: column;
+  max-width: 600px;
+  gap: 0.5rem;
+}
+
+.comment-box textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 80px;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.95rem;
+}
+
+.comment-box button {
+  align-self: flex-start;
+  margin-top: 0.5rem;
+  color: darkolivegreen;
+}
+
+.login-warning {
+  font-size: 0.9rem;
+  color: #c62828;
+}
+
+/* COMENTÁRIO INDIVIDUAL */
+
+.comment {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.comment-author {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: darkolivegreen;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+
+.comment-text {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: olivedrab;
+}

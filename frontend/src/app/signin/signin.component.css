@@ -1,0 +1,68 @@
+.signin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  background-color: #f0f0f0;
+  max-width: 400px;
+  border-radius: 10px;
+  padding-bottom: 30px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.signin h2 {
+  font-family: Garamond, serif;
+  color: olive;
+  font-size: 28px;
+  margin-bottom: 2rem;
+}
+
+.signin .name,
+.signin .email,
+.signin .password {
+  width: 100%;
+  max-width: 350px;
+}
+
+.signin p {
+  margin-bottom: 0.5rem;
+  color: olive;
+  font-weight: bold;
+  font-family: Garamond, serif;
+}
+
+.signin input {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 25px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.signin input:focus {
+  border-color: olive;
+  box-shadow: 0 0 5px rgba(138, 188, 159, 0.5);
+}
+
+.signin button {
+  padding: 10px 30px;
+  font-size: 16px;
+  background-color: olive;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+}
+
+label {
+  color: olive;
+  font-weight: bold;
+  font-family: Garamond, serif;
+  margin-bottom: 0.5rem;
+}

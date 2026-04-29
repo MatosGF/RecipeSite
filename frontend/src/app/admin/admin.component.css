@@ -1,0 +1,342 @@
+/* COMPONENTE: GRID PRINCIPAL (Ingredientes / Categorias / Dificuldade) */
+
+.function-grid {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin: 40px auto;
+  max-width: 1200px;
+}
+
+.function-grid > div {
+  background: #f5f5f5;
+  padding: 20px;
+  border-radius: 10px;
+  width: 300px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.function-grid h3 {
+  text-align: center;
+  margin-bottom: 15px;
+  font-size: 20px;
+  color: darkolivegreen;
+}
+
+.function-grid h2 {
+  color: darkolivegreen;
+}
+
+.function-grid input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+  transition: border 0.3s ease;
+}
+
+.function-grid input[type="text"]:focus {
+  border-color: #8b8b00;
+}
+
+.function-grid button {
+  background: darkolivegreen;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin: 4px 2px;
+  transition: background 0.3s ease;
+}
+
+.function-grid button:hover {
+  background: #6b6b00;
+}
+
+.function-grid ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 10px;
+}
+
+.function-grid li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  padding: 6px;
+  border-bottom: 1px solid #ddd;
+}
+
+.function-grid li input {
+  flex: 1;
+  margin-right: 10px;
+}
+
+/* COMPONENTE: DROPDOWN TITLES */
+
+.dropdown-title {
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  background: #eaeaea;
+  border-radius: 6px;
+  user-select: none;
+}
+
+.dropdown-title:hover {
+  background: #ddd;
+}
+
+/* COMPONENTE: LISTAS INTERNAS */
+
+.ingredients ul,
+.categories ul,
+.dificulty ul {
+  list-style: none;
+  margin-top: 10px;
+  padding: 0;
+}
+
+.ingredients li,
+.categories li,
+.dificulty li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  padding: 6px;
+  border-bottom: 1px solid #ccc;
+}
+
+/* COMPONENTE: GERENCIAR USUÁRIOS */
+
+.function-grid .users,
+.section-block-recipes,
+.section-admin-favorites {
+  background: #f5f5f5;
+  border-radius: 14px;
+  padding: 25px 30px;
+  margin: 40px auto;
+  max-width: 1200px;
+  width: 85%;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.function-grid .users h3 {
+  text-align: center;
+  margin-bottom: 15px;
+  font-size: 20px;
+  color: darkolivegreen;
+}
+
+.function-grid .users input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+  transition: border 0.3s ease;
+}
+
+.function-grid .users input[type="text"]:focus {
+  border-color: darkolivegreen;
+}
+
+.function-grid .users button {
+  background: darkolivegreen;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin: 4px 2px;
+  transition: background 0.3s ease;
+}
+
+.function-grid .users button:hover {
+  background: #6b6b00;
+}
+
+.function-grid .users table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.function-grid .users th,
+.function-grid .users td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.function-grid .users th {
+  color: darkolivegreen;
+  font-weight: bold;
+}
+
+.function-grid .users .alert {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 6px;
+}
+
+/* COMPONENTE: RECEITAS PENDENTES */
+
+.section-block-recipes {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.section-block-recipes h3 {
+  color: darkolivegreen;
+  margin-bottom: 20px;
+}
+
+.admin-recipe-card {
+  display: flex;
+  gap: 30px;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 25px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+  align-items: flex-start;
+}
+
+.admin-recipe-img {
+  width: 350px;
+  height: 525px;
+  object-fit: cover;
+  flex-shrink: 0;
+  background-color: #eaeaea;
+}
+
+.admin-recipe-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.admin-recipe-info h4 {
+  font-size: 24px;
+  font-weight: 600;
+  color: darkolivegreen;
+  margin-bottom: 5px;
+}
+
+.admin-recipe-info p {
+  margin: 0;
+  font-size: 15px;
+  color: #444;
+  line-height: 1.5;
+}
+
+.preparation {
+  color: #444;
+}
+
+.preparation p {
+  margin-top: 6px;
+  white-space: pre-line;
+}
+
+.admin-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+/* COMPONENTE: BOTÕES GERAIS */
+
+.btn-success,
+.btn-danger {
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-success {
+  background-color: darkolivegreen;
+  color: #fff;
+}
+
+.btn-success:hover {
+  background-color: #8f8f00;
+}
+
+.btn-danger {
+  background-color: #b32424;
+  color: #fff;
+}
+
+.btn-danger:hover {
+  background-color: #931e1e;
+}
+
+/* COMPONENTE: RECEITAS FAVORITAS */
+
+.section-admin-favorites h3 {
+  color: darkolivegreen;
+  font-size: 22px;
+  margin-bottom: 20px;
+}
+
+.favorite-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.section-admin-favorites .favorite-grid {
+  gap: 20px;
+}
+
+.favorite-card {
+  background: #f4f4f4;
+  border-radius: 5px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.favorite-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.favorite-card img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+}
+
+.section-admin-favorites .favorite-card img {
+  height: 260px;
+}
+
+.favorite-info {
+  padding: 12px;
+  text-align: center;
+}
+
+.favorite-info h4 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: darkolivegreen;
+}

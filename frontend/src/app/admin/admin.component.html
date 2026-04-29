@@ -1,0 +1,220 @@
+<section class="section-block">
+<div class="function-grid">
+  <!-- Ingredientes -->
+  <div class="ingredients">
+  <h3 (click)="showIngredients = !showIngredients" class="dropdown-title">
+    Ingredientes
+  </h3>
+
+  <input type="text" [(ngModel)]="newIngredient" placeholder="Novo ingrediente">
+  <button (click)="addIngredient()">Adicionar</button>
+
+  <!-- BUSCA -->
+<input
+  type="text"
+  [(ngModel)]="ingredientSearch"
+  (input)="buscarIngredientes()"
+  placeholder="Buscar ingrediente..."
+/>
+
+<!-- RESULTADO -->
+<ul *ngIf="filteredIngredients.length > 0">
+  <li *ngFor="let ing of filteredIngredients">
+
+    <span *ngIf="!ing.editing">{{ ing.name }}</span>
+    <input *ngIf="ing.editing" [(ngModel)]="ing.name" />
+
+    <button *ngIf="!ing.editing" (click)="editIngredient(ing)">Editar</button>
+    <button *ngIf="ing.editing" (click)="saveIngredient(ing)">Salvar</button>
+    <button (click)="deleteIngredient(ing.id)">Deletar</button>
+
+  </li>
+</ul>
+</div>
+
+  <!-- Categorias -->
+  <div class="category">
+  <h3 (click)="showCategory = !showCategory" class="dropdown-title">
+    Categorias
+    <span>{{ showCategory ? '▲' : '▼' }}</span>
+  </h3>
+
+  <input type="text" [(ngModel)]="newCategory" placeholder="Nova Categoria">
+  <button (click)="addCategory()">Adicionar</button>
+
+  <ul *ngIf="showCategory">
+    <li *ngFor="let cat of categories; let i = index">
+      <span *ngIf="!cat.editing">{{ cat.name }}</span>
+      <input *ngIf="cat.editing" type="text" [(ngModel)]="cat.name">
+
+      <button *ngIf="!cat.editing" (click)="editCategory(cat)">Editar</button>
+      <button *ngIf="cat.editing" (click)="saveCategory(cat)">Salvar</button>
+      <button (click)="deleteCategory(cat.id)">Deletar</button>
+    </li>
+  </ul>
+  </div>
+
+  <!-- Dificuldade -->
+  <div class="dificulty">
+  <h3 (click)="showDifficulties = !showDifficulties" class="dropdown-title">
+    Dificuldade
+    <span>{{ showDifficulties ? '▲' : '▼' }}</span>
+  </h3>
+
+  <input type="text" [(ngModel)]="newDifficulty" placeholder="Nova dificuldade">
+  <button (click)="addDifficulty()">Adicionar</button>
+
+  <ul *ngIf="showDifficulties">
+    <li *ngFor="let dif of difficulties; let i = index">
+      <span *ngIf="!dif.editing">{{ dif.name }}</span>
+      <input *ngIf="dif.editing" type="text" [(ngModel)]="dif.name">
+
+      <button *ngIf="!dif.editing" (click)="editDifficulty(dif)">Editar</button>
+      <button *ngIf="dif.editing" (click)="saveDifficulty(dif)">Salvar</button>
+      <button (click)="deleteDifficulty(dif.id)">Deletar</button>
+    </li>
+  </ul>
+  </div>
+</div>
+  <!-- Bloquear usuarios -->
+<section class="function-grid">
+  <div class="users">
+    <h2>Gerenciar Usuários</h2>
+
+    <div class="mb-3">
+      <input
+      type="text"
+      [(ngModel)]="searchTerm"
+      placeholder="Buscar usuário por nome"
+      class="form-control"
+    />
+    <button (click)="searchUsers()" class="btn btn-primary mt-2">
+      Buscar
+    </button>
+  </div>
+
+  <table class="table table-striped mt-3" *ngIf="users.length > 0 && searchDone">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td>{{ user.id }}</td>
+        <td>{{ user.name }}</td>
+        <td>{{ user.email }}</td>
+        <td>
+          <span
+            [ngClass]="{
+              'text-success': !user.isBlocked,
+              'text-danger': user.isBlocked
+            }"
+          >
+            {{ user.isBlocked ? "Bloqueado" : "Ativo" }}
+          </span>
+        </td>
+        <td>
+          <button
+            *ngIf="!user.isBlocked"
+            class="btn btn-danger btn-sm"
+            (click)="blockUser(user.id)"
+          >
+            Bloquear
+          </button>
+          <button
+            *ngIf="user.isBlocked"
+            class="btn btn-success btn-sm"
+            (click)="unblockUser(user.id)"
+          >
+            Desbloquear
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="users.length === 0 && searchDone" class="alert alert-warning">
+    Nenhum usuário encontrado.
+  </div>
+</div>
+</section>
+
+<section class="section-block-recipes">
+  <h3>Receitas Pendentes</h3>
+
+  <div *ngIf="carregando">Carregando receitas...</div>
+
+  <div *ngIf="!carregando && receitasPendentes.length === 0">
+    Nenhuma receita pendente.
+  </div>
+
+  <div class="admin-recipe-card" *ngFor="let receita of receitasPendentes">
+
+    <!-- IMAGEM -->
+    <img
+      class="admin-recipe-img"
+      [src]="receita.imageUrl || 'assets/no-image.jpg'"
+      alt="Imagem da receita"
+    />
+
+    <!-- INFO -->
+    <div class="admin-recipe-info">
+      <h4>{{ receita.title }}</h4>
+
+      <p><strong>Usuário:</strong> {{ receita.user?.name }}</p>
+      <p><strong>Status:</strong> {{ receita.status }}</p>
+      <p><strong>Categoria:</strong> {{ receita.category?.name }}</p>
+      <p><strong>Dificuldade:</strong> {{ receita.difficulty?.name }}</p>
+      <p><strong>Tempo:</strong> {{ receita.preparationTime }} min</p>
+
+       <div class="preparation">
+        <strong>Modo de preparo:</strong>
+        <p>{{ receita.description }}</p>
+      </div>
+
+      <div class="ingredients">
+        <strong>Ingredientes:</strong>
+        <ul>
+          <li *ngFor="let ing of receita.recipeIngredients">
+            {{ ing.amount }} {{ ing.measurementType?.name }} de
+            {{ ing.ingredient?.name }}
+          </li>
+        </ul>
+      </div>
+
+      <!-- BOTÕES -->
+      <div class="admin-buttons">
+        <button class="btn btn-success" (click)="aprovarReceita(receita.id)">
+          Aprovar
+        </button>
+
+        <button class="btn btn-danger" (click)="excluirReceita(receita.id)">
+          Excluir
+        </button>
+      </div>
+    </div>
+
+  </div>
+</section>
+<section class="section-block section-admin-favorites">
+  <h3>Receitas Favoritas</h3>
+
+  <div class="favorite-grid">
+    <div
+      class="favorite-card"
+      *ngFor="let fav of (favorites || [])"
+        (click)="router.navigate(['/recipe', fav.recipeId])"    >
+      <img [src]="fav.imageUrl" alt="Imagem da receita" />
+      <div class="favorite-info">
+        <h4>{{ fav.title }}</h4>
+      </div>
+    </div>
+  </div>
+</section>
+</section>
+

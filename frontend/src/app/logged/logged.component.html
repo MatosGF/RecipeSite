@@ -1,0 +1,264 @@
+<section class="section-block">
+  <h3>Receitas Favoritas</h3>
+
+  <div class="favorite-grid">
+    <div
+      class="favorite-card"
+      *ngFor="let fav of (favorites || [])"
+      (click)="router.navigate(['/recipe', fav.recipeId])"
+    >
+      <img
+        [src]="fav.imageUrl || 'assets/no-image.jpg'"
+        alt="Imagem da receita"
+      />
+
+      <div class="favorite-info">
+        <h4>{{ fav.title }}</h4>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section-block">
+  <h3>Inserir Receita</h3>
+
+  <form [formGroup]="recipeForm" (ngSubmit)="onSubmit()">
+
+
+    <!-- TÍTULO -->
+    <div class="form-group">
+      <label for="titulo">Título:</label>
+      <input
+        type="text"
+        id="titulo"
+        formControlName="titulo"
+        class="form-control"
+      />
+    </div>
+
+    <div>
+    <!-- INGREDIENTES -->
+    <label>Ingredientes:</label>
+
+  <!-- CAMPOS PARA ADICIONAR 1 INGREDIENTE POR VEZ -->
+  <div class="ingrediente-item" [formGroup]="ingredienteForm">
+    <div class="form-row">
+      <label>Ingrediente:</label>
+      <select formControlName="ingredientId" class="form-control">
+        <option value="">Selecione...</option>
+        <option *ngFor="let ing of ingredientes" [value]="ing.id">
+          {{ ing.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <label>Medida:</label>
+      <select formControlName="measurementTypeId" class="form-control">
+        <option value="">Selecione...</option>
+        <option *ngFor="let medida of medidas" [value]="medida.id">
+          {{ medida.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <label>Quantidade:</label>
+      <input
+        type="number"
+        formControlName="amount"
+        class="form-control"
+        min="0"
+        step="any" />
+    </div>
+
+    <button type="button" class="btn-add" (click)="addIngrediente()">
+      + Adicionar Ingrediente
+    </button>
+  </div>
+
+  <!-- LISTA DE INGREDIENTES JÁ ADICIONADOS -->
+<div class="ingredientes-lista" *ngIf="ingredientesAdicionados.length > 0">
+    <h4>Ingredientes adicionados:</h4>
+
+    <ul>
+     <li *ngFor="let ing of ingredientesAdicionados; let i = index">
+    {{ ing.ingredienteNome }} - {{ ing.amount }} {{ ing.medidaNome }}
+    <button class="btn-remove" (click)="removerIngrediente(i)">Remover</button>
+    </li>
+
+    </ul>
+  </div>
+
+     </div>
+    <!-- MÉTODO DE PREPARO -->
+    <div class="form-group">
+      <label for="metodoPreparo">Método de Preparo:</label>
+      <textarea
+        id="metodoPreparo"
+        formControlName="metodoPreparo"
+        class="form-control"
+        rows="4"
+      ></textarea>
+    </div>
+
+    <!-- CATEGORIA -->
+    <div class="form-group">
+      <label>Categoria:</label>
+      <select formControlName="categoria" class="form-control">
+        <option value="">Selecione...</option>
+        <option
+          *ngFor="let categoria of categorias"
+          [value]="categoria.id"
+        >
+          {{ categoria.name }}
+        </option>
+      </select>
+    </div>
+
+    <!-- DIFICULDADE -->
+    <div class="form-group">
+      <label>Dificuldade:</label>
+      <select formControlName="dificuldade" class="form-control">
+        <option value="">Selecione...</option>
+        <option
+          *ngFor="let dificuldade of dificuldades"
+          [value]="dificuldade.id"
+        >
+          {{ dificuldade.name }}
+        </option>
+      </select>
+    </div>
+
+    <!-- TEMPO DE PREPARO -->
+    <div class="form-group">
+      <label for="tempoPreparo">Tempo de Preparo (minutos):</label>
+      <input
+        type="number"
+        id="tempoPreparo"
+        formControlName="tempoPreparo"
+        class="form-control"
+      />
+    </div>
+
+    <div class="form-group">
+  <label>Imagem da Receita:</label>
+
+  <input
+  type="file"
+  class="form-control"
+  (change)="onFileSelected($event)"
+  #fileInput
+  />
+
+  <!-- Loading do upload -->
+  <div *ngIf="isUploadingImage" class="text-info mt-2">
+    ⏳ Enviando imagem... aguarde.
+  </div>
+
+  <!-- Preview da imagem -->
+  <div *ngIf="imageUrl && !isUploadingImage" class="mt-3">
+    <p>Pré-visualização:</p>
+    <img
+      [src]="imageUrl"
+      alt="Imagem da Receita"
+      style="max-width: 200px; border-radius: 4px;"
+    />
+  </div>
+</div>
+
+<!-- BOTÃO CRIAR -->
+<button
+  *ngIf="!editandoReceita"
+  type="submit"
+  class="btn btn-primary mt-4"
+  [disabled]="recipeForm.invalid || isUploadingImage"
+>
+  {{ isUploadingImage ? 'Enviando imagem...' : 'Salvar Receita' }}
+</button>
+
+<!-- BOTÃO EDITAR -->
+<button
+  *ngIf="editandoReceita"
+  type="button"
+  class="btn btn-primary mt-4"
+  (click)="salvarEdicao()"
+  [disabled]="recipeForm.invalid || isUploadingImage"
+>
+  Salvar Alterações
+</button>
+</form>
+</section>
+
+<section class="section-block">
+  <h3>Receitas Submetidas</h3>
+
+  <div class="recipe-list" *ngIf="minhasReceitas.length > 0; else semReceitas">
+
+  <div class="recipe-card" *ngFor="let receita of (minhasReceitas || [])">
+
+      <!-- IMAGEM -->
+      <img
+        class="recipe-img"
+        [src]="receita.imageUrl || 'assets/no-image.jpg'"
+        alt="Imagem da Receita"
+      />
+
+      <div class="recipe-info">
+
+        <!-- TÍTULO -->
+        <h4>{{ receita.title }}</h4>
+
+        <!-- STATUS -->
+        <p>
+          <strong>Status:</strong>
+          <span
+            [style.color]="receita.status === 'Approved' ? 'green' : 'orange'">
+            {{ receita.status === 'Approved' ? 'Aprovada' : 'Pendente' }}
+          </span>
+        </p>
+
+        <!-- CATEGORIA / DIFICULDADE / TEMPO -->
+        <p><strong>Categoria:</strong> {{ receita.category?.name }}</p>
+        <p><strong>Dificuldade:</strong> {{ receita.difficulty?.name }}</p>
+        <p><strong>Tempo de preparo:</strong> {{ receita.preparationTime }} min</p>
+
+        <!-- INGREDIENTES -->
+        <div class="ingredients">
+          <strong>Ingredientes:</strong>
+          <ul>
+            <li *ngFor="let ing of (receita.recipeIngredients || [])">
+              {{ ing.ingredient?.name }}
+              –
+              {{ ing.amount }}
+              {{ ing.measurementType?.name }}
+            </li>
+          </ul>
+        </div>
+
+        <!-- MÉTODO DE PREPARO -->
+        <div class="preparation">
+          <strong>Modo de preparo:</strong>
+          <p>{{ receita.description }}</p>
+        </div>
+
+        <!-- BOTÕES -->
+        <div class="card-buttons">
+          <button class="btn-edit" (click)="editarReceita(receita)">
+            Editar
+          </button>
+          <button class="btn-delete" (click)="deletarReceita(receita.id)">
+            Excluir
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <ng-template #semReceitas>
+    <p>Você ainda não cadastrou nenhuma receita.</p>
+  </ng-template>
+</section>
+
