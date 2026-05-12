@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './pages/home/home.component';
@@ -26,16 +25,16 @@ import { RecipeDetailsComponent } from './recipe-details/recipe-details.componen
     AdminComponent,
     UserinformationComponent,
     RecipeDetailsComponent,
-   ],
+  ],
   imports: [
     BrowserModule,
     FormsModule,
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
-    NgSelectModule
+    NgSelectModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

@@ -3,9 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User } from '../models/user.model';
 
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserService {
   private apiUrl = 'https://localhost:7048/api/user';
@@ -22,44 +21,38 @@ export class UserService {
   }
 
   blockUser(id: number) {
-  return this.http.post(`${this.apiUrl}/${id}/lock`, {});
+    return this.http.post(`${this.apiUrl}/${id}/lock`, {});
   }
 
   unblockUser(id: number) {
-  return this.http.post(`${this.apiUrl}/${id}/unlock`, {});
+    return this.http.post(`${this.apiUrl}/${id}/unlock`, {});
   }
 
   searchUsers(term: string) {
-  return this.http.get<User[]>(`${this.apiUrl}/search?name=${term}`);
+    return this.http.get<User[]>(`${this.apiUrl}/search?name=${term}`);
   }
 
- getMe() {
-  const token = localStorage.getItem('token');
+  getMe() {
+    const token = localStorage.getItem('token');
 
-  const headers = {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  };
+    const headers = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
 
-  return this.http.get<any>(`${this.apiUrl}/me`, headers);
+    return this.http.get<any>(`${this.apiUrl}/me`, headers);
+  }
+
+  updateMe(data: any) {
+    const token = localStorage.getItem('token');
+
+    const headers = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    return this.http.put(`${this.apiUrl}/me`, data, headers);
+  }
 }
-
-
- updateMe(data: any) {
-  const token = localStorage.getItem('token');
-
-  const headers = {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  };
-
-  return this.http.put(`${this.apiUrl}/me`, data, headers);
-}
-
-
-}
-
-
-

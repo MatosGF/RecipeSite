@@ -1,4 +1,3 @@
-/* GRID PRINCIPAL */
 .home-recipes {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -6,23 +5,20 @@
   padding: 20px;
 }
 
-/* CARD */
 .home-recipe-card {
   cursor: pointer;
   text-align: center;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-/* HOVER */
 .home-recipe-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
 }
 
-/* IMAGEM */
 .image-wrapper {
   width: 100%;
-  height: 360px; /* MAIS ALTA (estilo do exemplo) */
+  height: 360px;
   overflow: hidden;
 }
 
@@ -32,7 +28,6 @@
   object-fit: cover;
 }
 
-/* TÍTULO */
 .home-recipe-card h3 {
   margin: 14px 0 6px;
   font-size: 1.1rem;
@@ -40,7 +35,6 @@
   color: darkolivegreen;
 }
 
-/* ESTRELAS */
 .stars-container {
   position: relative;
   display: inline-block;

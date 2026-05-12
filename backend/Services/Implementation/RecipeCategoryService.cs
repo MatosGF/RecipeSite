@@ -37,16 +37,13 @@ namespace Service.Implementation
         {
             try
             {
-                // Buscar o RecipeCategory pelo ID
                 RecipeCategory entity = await _repository.GetByIdAsync(entityDto.Id);
                 if (entity == null)
                 {
                     throw new InvalidOperationException("Categoria de receita não encontrada.");
                 }
-                // Atualizar as informações
                 entity = RecipeCategoryMapper.ToEntityUpdate(entityDto, entity);
 
-                // Salvar as alterações no repositório
                 var entityUpdated = await _repository.Update(entity);
                 await _repository.SaveAsync();
                 return RecipeCategoryMapper.ToDto(entityUpdated);

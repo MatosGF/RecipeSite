@@ -47,7 +47,6 @@ namespace Models.Mappers
                 IsBlocked = dto.IsBlocked,
                 IsRegistered = dto.IsRegistered,
                 IsActive = dto.IsActive
-                // Password será tratada no Service (hash)
             };
         }
 

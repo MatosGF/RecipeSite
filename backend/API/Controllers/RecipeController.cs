@@ -12,7 +12,7 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]  
+    [Authorize]
     public class RecipeController : ControllerBase
     {
         private readonly ILogger<RecipeController> _logger;
@@ -26,9 +26,6 @@ namespace API.Controllers
             _context = context;
         }
 
-        // ========================
-        // GET ALL
-        // ========================
         [HttpGet]
         [AllowAnonymous] // Se quiser manter público
         public async Task<ActionResult<IEnumerable<RecipeDto>>> GetAll()
@@ -68,30 +65,27 @@ namespace API.Controllers
         }
 
 
-        // ========================
-        // GET BY ID (DETALHES)
-        // ========================
         [HttpGet("{id}")]
         [AllowAnonymous]
         public async Task<ActionResult<RecipeDto>> GetById(int id)
         {
             var recipe = await _context.Recipes
-                .Include(r => r.RecipeIngredients)
-                    .ThenInclude(ri => ri.Ingredient)
-                .Include(r => r.RecipeIngredients)
-                    .ThenInclude(ri => ri.MeasurementType)
-                .Include(r => r.Category)
-                .Include(r => r.Difficulty)
-                .Include(r => r.User)
-                .Include(r => r.Ratings)
-                .FirstOrDefaultAsync(r => r.Id == id);
+            .Include(r => r.RecipeIngredients)
+            .ThenInclude(ri => ri.Ingredient)
+            .Include(r => r.RecipeIngredients)
+            .ThenInclude(ri => ri.MeasurementType)
+            .Include(r => r.RecipeIngredients)
+            .Include(r => r.Category)
+            .Include(r => r.Difficulty)
+            .Include(r => r.User)
+            .Include(r => r.Ratings)
+            .FirstOrDefaultAsync(r => r.Id == id);
 
             if (recipe == null)
                 return NotFound();
 
             return Ok(RecipeMapper.ToDto(recipe));
         }
-
 
 
         [HttpPost]
@@ -120,9 +114,7 @@ namespace API.Controllers
             }
         }
 
-        // ========================
-        // UPLOAD IMAGE
-        // ========================
+      
         [HttpPost("upload-image")]
         [Consumes("multipart/form-data")]
         [SwaggerOperation(Summary = "Faz upload de uma imagem e retorna a URL gerada")]
@@ -148,9 +140,7 @@ namespace API.Controllers
             return Ok(new { imageUrl });
         }
 
-        // ========================
-        // UPDATE
-        // ========================
+     
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateRecipeDto dto)
         {
@@ -160,7 +150,7 @@ namespace API.Controllers
             try
             {
                 var updated = await _service.Update(dto);
-                return Ok(updated); 
+                return Ok(updated);
             }
             catch (Exception ex)
             {
@@ -170,10 +160,6 @@ namespace API.Controllers
         }
 
 
-
-        // ========================
-        // DELETE
-        // ========================
         [HttpDelete("{id}")]
         [Authorize]
         public async Task<IActionResult> Delete(int id)
@@ -186,9 +172,6 @@ namespace API.Controllers
         }
 
 
-        // ========================
-        // APPROVE
-        // ========================
         [HttpPut("{id}/approve")]
         public async Task<IActionResult> Approve(int id)
         {
@@ -201,9 +184,7 @@ namespace API.Controllers
             return NoContent();
         }
 
-        // ========================
-        // GET PENDING
-        // ========================
+    
         [HttpGet("pending")]
         public async Task<ActionResult<IEnumerable<RecipeDto>>> GetPending()
         {
@@ -211,9 +192,7 @@ namespace API.Controllers
             return Ok(pending);
         }
 
-        // ========================
-        // GET USER RECIPES
-        // ========================
+        
         [HttpGet("user/{userId}")]
         public async Task<ActionResult<IEnumerable<RecipeDto>>> GetUserRecipes(int userId)
         {

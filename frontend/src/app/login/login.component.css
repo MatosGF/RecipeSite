@@ -12,7 +12,7 @@
 
 .elements h2 {
   font-family: Garamond, serif;
-  color: olive;
+  color: darkolivegreen;
   font-size: 28px;
   margin-bottom: 2rem;
 }
@@ -25,7 +25,7 @@
 
 .elements p {
   margin-bottom: 0.5rem;
-  color: olive;
+  color: darkolivegreen;
   font-weight: bold;
   font-family: Garamond, serif;
 }
@@ -41,13 +41,13 @@
 }
 
 .elements input:focus {
-  border-color: olive;
+  border-color: darkolivegreen;
   box-shadow: 0 0 5px rgba(138, 188, 159, 0.5);
 }
 
 .elements a {
   font-size: 14px;
-  color: olive;
+  color: darkolivegreen;
   margin-bottom: 2rem;
   display: block;
   text-align: right;
@@ -62,7 +62,7 @@
 .elements button {
   padding: 10px 30px;
   font-size: 16px;
-  background-color: olive;
+  background-color: darkolivegreen;
   color: white;
   border: none;
   border-radius: 25px;

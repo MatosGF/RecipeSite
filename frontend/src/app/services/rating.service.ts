@@ -4,10 +4,9 @@ import { Observable } from 'rxjs';
 import { Rating } from '../models/rating.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RatingService {
-
   private apiUrl = 'https://localhost:7048/api/rating';
 
   constructor(private http: HttpClient) {}
@@ -16,7 +15,7 @@ export class RatingService {
     const token = localStorage.getItem('token');
 
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
     });
 
     return this.http.post(this.apiUrl, rating, { headers });
@@ -27,14 +26,14 @@ export class RatingService {
   }
 
   getMyRating(recipeId: number) {
-  const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token');
 
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${token}`
-  });
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
 
-  return this.http.get<any>(`${this.apiUrl}/recipe/${recipeId}/my`, { headers });
+    return this.http.get<any>(`${this.apiUrl}/recipe/${recipeId}/my`, {
+      headers,
+    });
   }
-
 }
-

@@ -1,12 +1,12 @@
 .recipe {
-      padding: 10px;
-      margin-bottom: 20px;
-      width: 350px;
-    }
+  padding: 10px;
+  margin-bottom: 20px;
+  width: 350px;
+}
 
 .recipe img {
-      max-width: 100%;
-      height: auto;
+  max-width: 100%;
+  height: auto;
 }
 
 .elements {

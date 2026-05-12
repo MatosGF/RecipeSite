@@ -7,7 +7,6 @@ using Models.Entities;
 
 public static class RecipeMapper
 {
-    // Entity -> DTO (para leitura)
     public static RecipeDto ToDto(Recipe entity)
     {
         if (entity == null) return null;
@@ -72,7 +71,6 @@ public static class RecipeMapper
     }
 
 
-    // DTO -> Entity (usado em update via RecipeDto)
     public static Recipe ToEntityAdd(RecipeDto dto)
     {
         if (dto == null) return null;
@@ -98,7 +96,6 @@ public static class RecipeMapper
         };
     }
 
-    // DTO de update -> atualiza entity existente
     public static Recipe ToEntityUpdate(RecipeDto dto, Recipe entity)
     {
         if (dto == null) return entity;
@@ -131,18 +128,16 @@ public static class RecipeMapper
     }
 
 
-    // Lista de entities -> lista de DTOs
     public static IEnumerable<RecipeDto> ToDtos(IEnumerable<Recipe> entities)
     {
         if (entities == null)
             return Enumerable.Empty<RecipeDto>();
 
-        return entities.Select(ToDto);
+        return entities.Select(ToDto).ToList();
     }
 
 
 
-    // CreateRecipeDto -> Recipe (usado na criação)
     public static Recipe ToEntityAdd(CreateRecipeDto dto)
     {
         if (dto == null) return null;
@@ -154,7 +149,7 @@ public static class RecipeMapper
             PreparationTime = dto.PreparationTime,
             CategoryId = dto.CategoryId,
             DifficultyId = dto.DifficultyId,
-            UserId = dto.UserId, // controller deve preencher a partir do token
+            UserId = dto.UserId, 
             Status = dto.Status ?? "Pending",
             ImageUrl = dto.ImageUrl,
             RecipeIngredients = dto.RecipeIngredients?.Select(ri => new RecipeIngredient

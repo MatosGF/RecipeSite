@@ -54,8 +54,7 @@ namespace Models.Mappers
                 Amount = dto.Amount,
                 IngredientId = dto.IngredientId,
                 MeasurementTypeId = dto.MeasurementTypeId,
-                IsActive = dto.IsActive
-                // ❌ NÃO seta Recipe aqui
+                IsActive = dto.IsActive                
             };
         }
 

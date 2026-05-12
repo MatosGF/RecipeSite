@@ -2,7 +2,6 @@
   <h3>Informações Pessoais</h3>
 
   <form [formGroup]="form">
-
     <input formControlName="name" placeholder="Nome" />
     <input formControlName="lastName" placeholder="Sobrenome" />
     <input formControlName="phone" placeholder="Telefone" />
@@ -12,6 +11,5 @@
 
     <button *ngIf="!editMode" type="button" (click)="editar()">Editar</button>
     <button *ngIf="editMode" type="button" (click)="salvar()">Salvar</button>
-
   </form>
 </section>

@@ -21,7 +21,6 @@ namespace Service.Implementation
         {
             try
             {
-                // converter o DTO de criação em uma entidade Recipe
                 var entity = new Recipe
                 {
                     Title = dto.Title,
@@ -41,11 +40,9 @@ namespace Service.Implementation
                     }).ToList()
                 };
 
-                // salvar no repositório
                 await _repository.AddAsync(entity);
                 await _repository.SaveAsync();
 
-                // carregar DTO completo novamente via mapper
                 var dtoFinal = RecipeMapper.ToDto(entity);
 
                 return dtoFinal;
@@ -72,7 +69,6 @@ namespace Service.Implementation
             if (entity == null)
                 throw new InvalidOperationException("Receita não encontrada.");
 
-            // Atualiza campos simples
             entity.Title = dto.Title;
             entity.Description = dto.Description;
             entity.PreparationTime = dto.PreparationTime;

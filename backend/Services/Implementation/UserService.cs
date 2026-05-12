@@ -51,10 +51,9 @@ namespace Service.Implementation
                 User user = await _userRepository.GetByEmail(email);
                 if (user.Email == null)
                 {
-                    return false; // Usuário não encontrado
+                    return false; 
                 }
 
-                // Verificar se a senha está correta
                 return VerifyPassword(password, user.Password);
             }
             catch (Exception ex)
@@ -74,7 +73,6 @@ namespace Service.Implementation
                     throw new InvalidOperationException("Usuário não encontrado.");
                 }
                 entity = UserMapper.ToEntityUpdate(userDto, entity);
-                //entity.Password = HashPassword(userDto.Password);
 
                 var entityUpdate = await _userRepository.Update(entity);
                 await _userRepository.SaveAsync();
@@ -107,7 +105,6 @@ namespace Service.Implementation
 
         private bool VerifyPassword(string password, string storedHash)
         {
-            // Verifica se a senha não é nula ou vazia
             if (string.IsNullOrWhiteSpace(password))
             {
                 throw new ArgumentException("A senha não pode ser nula ou vazia.", nameof(password));
@@ -119,13 +116,11 @@ namespace Service.Implementation
             }
 
             try
-            {
-                // Verifica se a senha fornecida corresponde ao hash armazenado
+            {                
                 return BCrypt.Net.BCrypt.Verify(password, storedHash);
             }
             catch (Exception ex)
             {
-                // Lidar com exceções inesperadas
                 throw new InvalidOperationException("Erro ao verificar a senha.", ex);
             }
         }
@@ -168,8 +163,6 @@ namespace Service.Implementation
                 throw;
             }
         }
-
-
         public async Task LockUser(int userId)
         {
             await _userRepository.LockUserAsync(userId);

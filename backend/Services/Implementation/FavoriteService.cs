@@ -40,16 +40,13 @@ namespace Service.Implementation
         {
             try
             {
-                // Buscar o Favorite pelo ID
                 Favorite entity = await _repository.GetByIdAsync(entityDto.Id);
                 if (entity == null)
                 {
                     throw new InvalidOperationException("Favorito não encontrada.");
                 }
-                // Atualizar as informações
                 entity = FavoriteMapper.ToEntityUpdate(entityDto, entity);
 
-                // Salvar as alterações no repositório
                 var entityUpdated = await _repository.Update(entity);
                 await _repository.SaveAsync();
                 return FavoriteMapper.ToDto(entityUpdated);
@@ -125,12 +122,12 @@ namespace Service.Implementation
                 });
 
                 await _repository.SaveAsync();
-                return true; // favoritou
+                return true; 
             }
 
             _repository.Delete(favorite);
             await _repository.SaveAsync();
-            return false; // desfavoritou
+            return false; 
         }
 
         public async Task<bool> IsFavorite(int userId, int recipeId)

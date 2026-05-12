@@ -10,7 +10,7 @@ export interface Ingredient {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class IngredientService {
   private apiUrl = 'https://localhost:7048/api/Ingredient';
@@ -34,7 +34,6 @@ export class IngredientService {
   }
 
   search(name: string): Observable<Ingredient[]> {
-  return this.http.get<Ingredient[]>(`${this.apiUrl}/search?name=${name}`);
+    return this.http.get<Ingredient[]>(`${this.apiUrl}/search?name=${name}`);
   }
 }
-

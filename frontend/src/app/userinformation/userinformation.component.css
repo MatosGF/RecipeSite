@@ -16,7 +16,6 @@
   padding-bottom: 10px;
 }
 
-/* Form */
 form {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -24,7 +23,6 @@ form {
   margin-right: 25px;
 }
 
-/* Inputs */
 input {
   width: 100%;
   padding: 10px 12px;
@@ -47,7 +45,6 @@ input:disabled {
   cursor: not-allowed;
 }
 
-/* Botões */
 button {
   grid-column: span 2;
   padding: 12px;
@@ -63,7 +60,6 @@ button:hover {
   transform: translateY(-1px);
 }
 
-/* Botão Editar */
 button[type="button"]:first-of-type {
   background-color: #eeeeee;
   color: #333;
@@ -73,7 +69,6 @@ button[type="button"]:first-of-type:hover {
   background-color: #e0e0e0;
 }
 
-/* Botão Salvar */
 button[type="button"]:last-of-type {
   background-color: darkolivegreen;
   color: #fff;

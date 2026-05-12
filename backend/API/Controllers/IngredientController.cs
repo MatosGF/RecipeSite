@@ -108,12 +108,17 @@ namespace API.Controllers
             try
             {
                 var deleted = await _service.DeleteAsync(id);
+
                 if (!deleted)
                 {
                     return NotFound();
                 }
 
                 return NoContent();
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {

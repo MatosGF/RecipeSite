@@ -37,16 +37,13 @@ namespace Service.Implementation
         {
             try
             {
-                // Buscar o MeasurementType pelo ID
                 MeasurementType entity = await _repository.GetByIdAsync(entityDto.Id);
                 if (entity == null)
                 {
                     throw new InvalidOperationException("Tipo de medição não encontrada.");
                 }
-                // Atualizar as informações
                 entity = MeasurementTypeMapper.ToEntityUpdate(entityDto, entity);
 
-                // Salvar as alterações no repositório
                 var entityUpdated = await _repository.Update(entity);
                 await _repository.SaveAsync();
                 return MeasurementTypeMapper.ToDto(entityUpdated);

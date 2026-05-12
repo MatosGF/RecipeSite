@@ -1,54 +1,47 @@
 <div class="page-container">
+  <header>
+    <h1>GreenSalad</h1>
 
-<header>
-  <h1>GreenSalad</h1>
+    <nav class="menu">
+      <ng-container *ngIf="!isLoggedIn(); else loggedInMenu">
+        <a routerLink="/login">LOGIN</a>
+      </ng-container>
 
-  <nav class="menu">
+      <ng-template #loggedInMenu>
+        <div class="user-area">
+          <span class="user-name" (click)="toggleMenu()">
+            Olá, {{ getUserName() }} ▾
+          </span>
 
-    <!-- NÃO LOGADO -->
-    <ng-container *ngIf="!isLoggedIn(); else loggedInMenu">
-      <a routerLink="/login">LOGIN</a>
-    </ng-container>
-
-    <!-- LOGADO -->
-    <ng-template #loggedInMenu>
-
-      <div class="user-area">
-        <span class="user-name" (click)="toggleMenu()">
-          Olá, {{ getUserName() }} ▾
-        </span>
-
-        <div class="dropdown" *ngIf="menuOpen">
-          <button (click)="goToProfile()">Meu perfil</button>
-          <button (click)="goToActivity()">Minha atividade</button>
-          <hr />
-          <button class="logout" (click)="logout()">Sair</button>
+          <div class="dropdown" *ngIf="menuOpen">
+            <button (click)="goToProfile()">Meu perfil</button>
+            <button (click)="goToActivity()">Minha atividade</button>
+            <hr />
+            <button class="logout" (click)="logout()">Sair</button>
+          </div>
         </div>
+      </ng-template>
+
+      <div>
+        <a routerLink="/">INÍCIO</a>
       </div>
 
-    </ng-template>
+      <div class="campo-busca">
+        <input
+          type="text"
+          placeholder="Buscar receita..."
+          [(ngModel)]="searchText"
+          (keyup.enter)="buscar()"
+        />
+      </div>
+    </nav>
+  </header>
 
-    <div>
-      <a routerLink="/">INÍCIO</a>
-    </div>
+  <main>
+    <router-outlet></router-outlet>
+  </main>
 
-    <div class="campo-busca">
-  <input
-    type="text"
-    placeholder="Buscar receita..."
-    [(ngModel)]="searchText"
-    (keyup.enter)="buscar()"
-  >
-  </div>
-  </nav>
-</header>
-
-<main>
-  <router-outlet></router-outlet>
-</main>
-
-<footer>
-  <p>© 2025 Gabriela Matos - Todos os direitos reservados</p>
-</footer>
-
+  <footer>
+    <p>© 2025 Gabriela Matos - Todos os direitos reservados</p>
+  </footer>
 </div>

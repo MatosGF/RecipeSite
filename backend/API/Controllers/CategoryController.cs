@@ -114,6 +114,10 @@ namespace API.Controllers
 
                 return NoContent();
             }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error deleting CategoryDto with ID {{Id}}", id);

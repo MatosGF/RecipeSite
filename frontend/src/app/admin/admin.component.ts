@@ -11,11 +11,9 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
-  styleUrls: ['./admin.component.css']
+  styleUrls: ['./admin.component.css'],
 })
 export class AdminComponent implements OnInit {
-
-  // Arrays para renderização
   categories: Category[] = [];
   ingredients: Ingredient[] = [];
   difficulties: Difficulty[] = [];
@@ -24,13 +22,15 @@ export class AdminComponent implements OnInit {
   favorites: any[] = [];
   filteredIngredients: Ingredient[] = [];
 
-  // Campos temporários para adicionar novos
   newCategory: string = '';
   newIngredient: string = '';
   newDifficulty: string = '';
   searchTerm: string = '';
   erroMsg = '';
   ingredientSearch: string = '';
+  ingredientError = '';
+  categoryError = '';
+  difficultyError = '';
 
   showIngredients = false;
   showCategory = false;
@@ -45,7 +45,7 @@ export class AdminComponent implements OnInit {
     private userService: UserService,
     private recipeService: RecipeService,
     private favoriteService: FavoriteService,
-    public router: Router
+    public router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -55,23 +55,24 @@ export class AdminComponent implements OnInit {
   }
 
   loadAll() {
-    this.categoryService.getAll().subscribe(data => this.categories = data);
-    this.difficultyService.getAll().subscribe(data => this.difficulties = data);
-    this.userService.getUsers().subscribe(data => this.users = data);
+    this.categoryService.getAll().subscribe((data) => (this.categories = data));
+    this.difficultyService
+      .getAll()
+      .subscribe((data) => (this.difficulties = data));
+    this.userService.getUsers().subscribe((data) => (this.users = data));
   }
 
   carregarFavoritos() {
-  this.favoriteService.getMyFavorites().subscribe((res: any) => {
-    console.log("FAVORITOS:", res);
+    this.favoriteService.getMyFavorites().subscribe((res: any) => {
+      console.log('FAVORITOS:', res);
 
-    this.favorites = Array.isArray(res)
-      ? res
-      : Array.isArray(res.favorites)
-        ? res.favorites
-        : [];
-  });
+      this.favorites = Array.isArray(res)
+        ? res
+        : Array.isArray(res.favorites)
+          ? res.favorites
+          : [];
+    });
   }
-
 
   carregarPendentes(): void {
     this.carregando = true;
@@ -83,18 +84,16 @@ export class AdminComponent implements OnInit {
       error: (err: HttpErrorResponse) => {
         this.erroMsg = err.error || 'Erro ao carregar receitas pendentes.';
         this.carregando = false;
-      }
+      },
     });
   }
 
   buscarIngredientes() {
-  if (!this.ingredientSearch.trim()) {
-    this.filteredIngredients = [];
-    return;
-  }
-
-  this.ingredientService.search(this.ingredientSearch)
-    .subscribe(data => {
+    if (!this.ingredientSearch.trim()) {
+      this.filteredIngredients = [];
+      return;
+    }
+    this.ingredientService.search(this.ingredientSearch).subscribe((data) => {
       this.filteredIngredients = data;
     });
   }
@@ -104,20 +103,21 @@ export class AdminComponent implements OnInit {
 
     this.recipeService.approveRecipe(id).subscribe({
       next: () => {
-        this.receitasPendentes = this.receitasPendentes.filter(r => r.id !== id);
+        this.receitasPendentes = this.receitasPendentes.filter(
+          (r) => r.id !== id,
+        );
       },
       error: (err) => {
         console.error('Erro ao aprovar receita:', err);
         alert('Erro ao aprovar receita.');
-      }
+      },
     });
   }
 
-  // ---------- CATEGORY ----------
   addCategory() {
     if (!this.newCategory.trim()) return;
     const item: Category = { id: 0, isAtive: true, name: this.newCategory };
-    this.categoryService.create(item).subscribe(created => {
+    this.categoryService.create(item).subscribe((created) => {
       this.categories.push(created);
       this.newCategory = '';
     });
@@ -134,16 +134,28 @@ export class AdminComponent implements OnInit {
   }
 
   deleteCategory(id: number) {
-  this.categoryService.delete(id).subscribe(() => {
-    this.loadAll();
-  });
+    this.categoryError = '';
+    this.categoryService.delete(id).subscribe({
+      next: () => {
+        this.loadAll();
+      },
+
+      error: (err) => {
+        console.error(err);
+
+        this.categoryError = err.error;
+
+        setTimeout(() => {
+          this.categoryError = '';
+        }, 4000);
+      },
+    });
   }
 
-  // ---------- INGREDIENT ----------
   addIngredient() {
     if (!this.newIngredient.trim()) return;
     const item: Ingredient = { id: 0, isAtive: true, name: this.newIngredient };
-    this.ingredientService.create(item).subscribe(created => {
+    this.ingredientService.create(item).subscribe((created) => {
       this.ingredients.push(created);
       this.newIngredient = '';
     });
@@ -154,24 +166,34 @@ export class AdminComponent implements OnInit {
   }
 
   saveIngredient(ing: Ingredient) {
-      console.log('Payload enviado para API:', ing);
-
     this.ingredientService.update(ing.id, ing).subscribe(() => {
       ing['editing'] = false;
     });
   }
 
   deleteIngredient(id: number) {
-  this.ingredientService.delete(id).subscribe(() => {
-    this.loadAll();
-  });
+    this.ingredientError = '';
+    this.ingredientService.delete(id).subscribe({
+      next: () => {
+        this.filteredIngredients = this.filteredIngredients.filter(
+          (i) => i.id !== id,
+        );
+        this.ingredients = this.ingredients.filter((i) => i.id !== id);
+      },
+      error: (err) => {
+        this.ingredientError = err.error;
+
+        setTimeout(() => {
+          this.ingredientError = '';
+        }, 4000);
+      },
+    });
   }
 
-  // ---------- DIFFICULTY ----------
   addDifficulty() {
     if (!this.newDifficulty.trim()) return;
     const item: Difficulty = { id: 0, isAtive: true, name: this.newDifficulty };
-    this.difficultyService.create(item).subscribe(created => {
+    this.difficultyService.create(item).subscribe((created) => {
       this.difficulties.push(created);
       this.newDifficulty = '';
     });
@@ -188,36 +210,44 @@ export class AdminComponent implements OnInit {
   }
 
   deleteDifficulty(id: number) {
-  this.difficultyService.delete(id).subscribe(() => {
-    this.loadAll();
-  });
+    this.difficultyError = '';
+    this.difficultyService.delete(id).subscribe({
+      next: () => {
+        this.loadAll();
+      },
+      error: (err) => {
+        console.error(err);
+        this.difficultyError = err.error;
+        setTimeout(() => {
+          this.difficultyError = '';
+        }, 4000);
+      },
+    });
   }
 
   searchUsers(): void {
-  this.searchDone = true;
+    this.searchDone = true;
 
-  if (!this.searchTerm.trim()) {
-    this.users = []; // limpa se não tiver nada digitado
-    return;
-  }
+    if (!this.searchTerm.trim()) {
+      this.users = [];
+      return;
+    }
 
-  this.userService.searchUsers(this.searchTerm).subscribe(data => {
-    this.users = data;
-  });
+    this.userService.searchUsers(this.searchTerm).subscribe((data) => {
+      this.users = data;
+    });
   }
 
   blockUser(id: number): void {
-  console.log("Clicou em bloquear:", id);
-  this.userService.blockUser(id).subscribe({
-    next: () => {
-      console.log("Usuário bloqueado com sucesso!");
-      this.searchUsers();
-    },
-    error: (err) => console.error("Erro ao bloquear usuário:", err)
-  });
+    this.userService.blockUser(id).subscribe({
+      next: () => {
+        this.searchUsers();
+      },
+      error: (err) => console.error('Erro ao bloquear usuário:', err),
+    });
   }
   unblockUser(id: number): void {
-  this.userService.unblockUser(id).subscribe(() => this.searchUsers());
+    this.userService.unblockUser(id).subscribe(() => this.searchUsers());
   }
 
   excluirReceita(id: number): void {
@@ -225,15 +255,14 @@ export class AdminComponent implements OnInit {
 
     this.recipeService.deleteReceita(id).subscribe({
       next: () => {
-        this.receitasPendentes =
-          this.receitasPendentes.filter((r: { id: number; }) => r.id !== id);
+        this.receitasPendentes = this.receitasPendentes.filter(
+          (r: { id: number }) => r.id !== id,
+        );
       },
       error: (err: any) => {
         console.error('Erro ao excluir receita:', err);
         alert('Erro ao excluir receita.');
-      }
+      },
     });
-    }
+  }
 }
-
-

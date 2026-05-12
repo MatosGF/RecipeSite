@@ -1,4 +1,3 @@
-import { User } from './models/user.model';
 import { Component } from '@angular/core';
 import { AuthService } from './services/auth.service.service';
 import { Router } from '@angular/router';
@@ -6,17 +5,19 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
 })
-export class AppComponent  {
-
+export class AppComponent {
   menuOpen = false;
   searchText: string = '';
 
   title(title: any) {
     throw new Error('Method not implemented.');
   }
-  constructor(public authService: AuthService, private router: Router, ) {}
+  constructor(
+    public authService: AuthService,
+    private router: Router,
+  ) {}
 
   isLoggedIn(): boolean {
     return this.authService.isLoggedIn();
@@ -27,8 +28,8 @@ export class AppComponent  {
   }
 
   get isAdmin(): boolean {
-  const role = this.authService.getUserRole();
-  return role?.toLowerCase() === 'admin';
+    const role = this.authService.getUserRole();
+    return role?.toLowerCase() === 'admin';
   }
 
   logout(): void {
@@ -57,11 +58,10 @@ export class AppComponent  {
   }
 
   buscar() {
-  if (!this.searchText.trim()) return;
+    if (!this.searchText.trim()) return;
 
-  this.router.navigate(['/'], {
-    queryParams: { search: this.searchText }
-  });
+    this.router.navigate(['/'], {
+      queryParams: { search: this.searchText },
+    });
+  }
 }
-}
-

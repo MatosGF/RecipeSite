@@ -50,16 +50,13 @@ namespace Service.Implementation
         {
             try
             {
-                // Buscar o Rating pelo ID
                 Rating entity = await _repository.GetByIdAsync(entityDto.Id);
                 if (entity == null)
                 {
                     throw new InvalidOperationException("Avaliação não encontrada.");
                 }
-                // Atualizar as informações
                 entity = RatingMapper.ToEntityUpdate(entityDto, entity);
 
-                // Salvar as alterações no repositório
                 var entityUpdated = await _repository.Update(entity);
                 await _repository.SaveAsync();
                 return RatingMapper.ToDto(entityUpdated);
@@ -138,7 +135,6 @@ namespace Service.Implementation
 
             if (existing == null)
             {
-                // criar nova avaliação
                 var entity = RatingMapper.ToEntityAdd(dto);
                 var saved = await _repository.AddAsync(entity);
                 await _repository.SaveAsync();
@@ -146,7 +142,6 @@ namespace Service.Implementation
                 return RatingMapper.ToDto(saved);
             }
 
-            // atualizar avaliação existente
             existing.RatingValue = dto.RatingValue;
 
             var updated = await _repository.Update(existing);

@@ -14,7 +14,7 @@
 
 .signin h2 {
   font-family: Garamond, serif;
-  color: olive;
+  color: darkolivegreen;
   font-size: 28px;
   margin-bottom: 2rem;
 }
@@ -28,7 +28,7 @@
 
 .signin p {
   margin-bottom: 0.5rem;
-  color: olive;
+  color: darkolivegreen;
   font-weight: bold;
   font-family: Garamond, serif;
 }
@@ -44,7 +44,7 @@
 }
 
 .signin input:focus {
-  border-color: olive;
+  border-color: darkolivegreen;
   box-shadow: 0 0 5px rgba(138, 188, 159, 0.5);
 }
 
@@ -61,7 +61,7 @@
 }
 
 label {
-  color: olive;
+  color: darkolivegreen;
   font-weight: bold;
   font-family: Garamond, serif;
   margin-bottom: 0.5rem;

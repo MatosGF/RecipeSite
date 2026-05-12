@@ -37,16 +37,13 @@ namespace Service.Implementation
         {
             try
             {
-                // Buscar o RecipeIngredient pelo ID
                 RecipeIngredient entity = await _recipeIngredientRepository.GetByIdAsync(entityDto.Id);
                 if (entity == null)
                 {
                     throw new InvalidOperationException("Ingrediente da receita não encontrado.");
                 }
-                // Atualizar as informações
                 entity = RecipeIngredientMapper.ToEntityUpdate(entityDto, entity);
 
-                // Salvar as alterações no repositório
                 var entityUpdated = await _recipeIngredientRepository.Update(entity);
                 await _recipeIngredientRepository.SaveAsync();
                 return RecipeIngredientMapper.ToDto(entityUpdated);

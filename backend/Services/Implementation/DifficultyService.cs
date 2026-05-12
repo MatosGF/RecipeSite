@@ -1,7 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Models;
 using Models.Entities;
 using Models.Mappers;
+using Repository.Context;
 using Repository.Interfaces;
 using Service.Interfaces;
 
@@ -12,11 +14,13 @@ namespace Service.Implementation
     {
         private readonly IDifficultyRepository _repository;
         private readonly ILogger<DifficultyService> _logger;
+        private readonly DbContextRecipe _context;
 
-        public DifficultyService(IDifficultyRepository difficultyRepository, ILogger<DifficultyService> logger)
+        public DifficultyService(IDifficultyRepository difficultyRepository, ILogger<DifficultyService> logger, DbContextRecipe context)
         {
             _repository = difficultyRepository ?? throw new ArgumentNullException(nameof(difficultyRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         public async Task<DifficultyDto> AddAsync(DifficultyDto entityDto)
@@ -41,16 +45,13 @@ namespace Service.Implementation
         {
             try
             {
-                // Buscar o Difficulty pelo ID
                 Difficulty entity = await _repository.GetByIdAsync(entityDto.Id);
                 if (entity == null)
                 {
                     throw new InvalidOperationException("Dificuldade não encontrada.");
                 }
-                // Atualizar as informações
                 entity = DifficultyMapper.ToEntityUpdate(entityDto, entity);
 
-                // Salvar as alterações no repositório
                 var entityUpdated = await _repository.Update(entity);
                 await _repository.SaveAsync();
                 return DifficultyMapper.ToDto(entityUpdated);
@@ -96,9 +97,14 @@ namespace Service.Implementation
             {
                 var entity = await _repository.GetByIdAsync(id);
                 if (entity == null)
-                {
                     return false;
-                }
+
+                var isUsed = await _context.Recipes
+                .AnyAsync(r => r.DifficultyId == id);
+
+                if (isUsed)
+                    throw new InvalidOperationException(
+                        "Não é possível deletar a dificuldade porque ele está sendo usado em receitas.");
 
                 _repository.Delete(entity);
                 await _repository.SaveAsync();
@@ -107,7 +113,7 @@ namespace Service.Implementation
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Ocorreu um erro ao tentar deletar dificuldade com ID {{ID}}", id);
+                _logger.LogError(ex, "Ocorreu um erro ao tentar deletar categoria com ID {ID}", id);
                 throw;
             }
         }

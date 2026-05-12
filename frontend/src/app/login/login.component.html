@@ -3,20 +3,12 @@
   <form [formGroup]="logInForm" (ngSubmit)="onSubmit()">
     <div class="email">
       <p>E-mail</p>
-      <input
-        type="text"
-        placeholder="Email"
-        formControlName="email"
-      >
+      <input type="text" placeholder="Email" formControlName="email" />
     </div>
 
     <div class="password">
       <p>Senha</p>
-      <input
-        type="password"
-        placeholder="Senha"
-        formControlName="password"
-      >
+      <input type="password" placeholder="Senha" formControlName="password" />
     </div>
 
     <a routerLink="/resetsenha">Esqueceu sua senha?</a>
@@ -25,10 +17,11 @@
 
     <div class="register">
       <p>Ainda não é cadastrado?</p>
-      <button type="button" (click)="navegatetosignin()">Cadastre-se já!</button>
+      <button type="button" (click)="navegatetosignin()">
+        Cadastre-se já!
+      </button>
     </div>
 
     <p *ngIf="erroLogin" class="erro">{{ erroLogin }}</p>
   </form>
 </div>
-

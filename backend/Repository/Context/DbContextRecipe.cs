@@ -25,26 +25,60 @@ namespace Repository.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Relacionamento Recipe -> RecipeIngredient
             modelBuilder.Entity<Recipe>()
                 .HasMany(r => r.RecipeIngredients)
                 .WithOne(ri => ri.Recipe)
                 .HasForeignKey(ri => ri.RecipeId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Relacionamento Ingredient -> RecipeIngredient
             modelBuilder.Entity<Ingredient>()
                 .HasMany<RecipeIngredient>()
                 .WithOne(ri => ri.Ingredient)
                 .HasForeignKey(ri => ri.IngredientId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Relacionamento MeasurementType -> RecipeIngredient
             modelBuilder.Entity<MeasurementType>()
                 .HasMany<RecipeIngredient>()
                 .WithOne(ri => ri.MeasurementType)
                 .HasForeignKey(ri => ri.MeasurementTypeId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Recipe>()
+                .HasOne(r => r.Category)
+                .WithMany()
+                .HasForeignKey(r => r.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Recipe>()
+                .HasOne(r => r.Difficulty)
+                .WithMany()
+                .HasForeignKey(r => r.DifficultyId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Recipe>()
+                .HasOne(r => r.User)
+                .WithMany()
+                .HasForeignKey(r => r.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Rating>()
+                .HasOne(r => r.Recipe)
+                .WithMany(r => r.Ratings)
+                .HasForeignKey(r => r.RecipeId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Comment>()
+                .HasOne(c => c.Recipe)
+                .WithMany(r => r.Comments)
+                .HasForeignKey(c => c.RecipeId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Favorite>()
+                .HasOne(f => f.Recipe)
+                .WithMany(r => r.Favorites)
+                .HasForeignKey(f => f.RecipeId)
+                .OnDelete(DeleteBehavior.Cascade);
+
 
             base.OnModelCreating(modelBuilder);
         }

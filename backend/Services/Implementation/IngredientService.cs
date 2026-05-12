@@ -1,7 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Models;
 using Models.Entities;
 using Models.Mappers;
+using Repository.Context;
 using Repository.Interfaces;
 using Service.Interfaces;
 
@@ -12,10 +14,12 @@ namespace Service.Implementation
     {
         private readonly IIngredientRepository _repository;
         private readonly ILogger<IngredientService> _logger;
-        public IngredientService(IIngredientRepository IngredientRepository, ILogger<IngredientService> logger)
+        private readonly DbContextRecipe _context;
+        public IngredientService(IIngredientRepository ingredientRepository,ILogger<IngredientService> logger, DbContextRecipe context)
         {
-            _repository = IngredientRepository ?? throw new ArgumentNullException(nameof(IngredientRepository));
+            _repository = ingredientRepository ?? throw new ArgumentNullException(nameof(ingredientRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
         public async Task<IngredientDto> AddAsync(IngredientDto entityDto)
         {
@@ -38,16 +42,13 @@ namespace Service.Implementation
         {
             try
             {
-                // Buscar o Ingredient pelo ID
                 Ingredient entity = await _repository.GetByIdAsync(entityDto.Id);
                 if (entity == null)
                 {
                     throw new InvalidOperationException("Tipo de medição não encontrada.");
                 }
-                // Atualizar as informações
                 entity = IngredientMapper.ToEntityUpdate(entityDto, entity);
 
-                // Salvar as alterações no repositório
                 var entityUpdated = await _repository.Update(entity);
                 await _repository.SaveAsync();
                 return IngredientMapper.ToDto(entityUpdated);
@@ -92,9 +93,14 @@ namespace Service.Implementation
             {
                 var entity = await _repository.GetByIdAsync(id);
                 if (entity == null)
-                {
                     return false;
-                }
+
+                var isUsed = await _context.RecipeIngredients
+                .AnyAsync(ri => ri.IngredientId == id);
+
+                if (isUsed)
+                    throw new InvalidOperationException(
+                        "Não é possível deletar o ingrediente porque ele está sendo usado em receitas.");
 
                 _repository.Delete(entity);
                 await _repository.SaveAsync();
@@ -103,7 +109,7 @@ namespace Service.Implementation
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Ocorreu um erro ao tentar deletar tipo de medição com ID {{ID}}", id);
+                _logger.LogError(ex, "Ocorreu um erro ao tentar deletar categoria com ID {ID}", id);
                 throw;
             }
         }

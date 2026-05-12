@@ -10,7 +10,7 @@ export interface Difficulty {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DifficultyService {
   private apiUrl = 'https://localhost:7048/api/Difficulty';
@@ -33,4 +33,3 @@ export class DifficultyService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }
-

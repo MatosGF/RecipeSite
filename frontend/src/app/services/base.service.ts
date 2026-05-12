@@ -1,9 +1,11 @@
-// src/app/services/base.service.ts
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export abstract class BaseService<T> {
-  constructor(protected http: HttpClient, protected baseUrl: string) {}
+  constructor(
+    protected http: HttpClient,
+    protected baseUrl: string,
+  ) {}
 
   getAll(): Observable<T[]> {
     return this.http.get<T[]>(this.baseUrl);
@@ -25,5 +27,3 @@ export abstract class BaseService<T> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 }
-
-

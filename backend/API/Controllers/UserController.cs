@@ -27,8 +27,7 @@ namespace API.Controllers
             _logger = logger;
             _configuration = configuration;
         }
-
-        
+                
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserDto>>> GetAll()
@@ -204,7 +203,6 @@ namespace API.Controllers
             await _service.UpdateProfile(userId, dto);
             return NoContent();
         }
-
 
     }
 }

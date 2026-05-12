@@ -68,16 +68,13 @@ namespace Service.Implementation
         {
             try
             {
-                // Buscar o Comment pelo ID
                 Comment entity = await _repository.GetByIdAsync(entityDto.Id);
                 if (entity == null)
                 {
                     throw new InvalidOperationException("Comentário não encontrado.");
                 }
-                // Atualizar as informações
                 entity = CommentMapper.ToEntityUpdate(entityDto, entity);
 
-                // Salvar as alterações no repositório
                 var entityUpdated = await _repository.Update(entity);
                 await _repository.SaveAsync();
                 return CommentMapper.ToDto(entityUpdated);

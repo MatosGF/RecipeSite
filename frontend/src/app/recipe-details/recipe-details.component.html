@@ -1,17 +1,9 @@
 <div *ngIf="receita" class="recipe-details">
-
-  <!-- TOPO -->
   <div class="recipe-header">
-
-    <!-- IMAGEM -->
     <div class="image-wrapper">
-      <img
-        [src]="receita.imageUrl"
-        alt="Imagem da receita"
-      />
+      <img [src]="receita.imageUrl" alt="Imagem da receita" />
     </div>
 
-    <!-- INFO -->
     <div class="info-wrapper">
       <h1>{{ receita.title }}</h1>
 
@@ -19,22 +11,18 @@
       <p><strong>Dificuldade:</strong> {{ receita.difficulty?.name }}</p>
       <p><strong>Tempo:</strong> {{ receita.preparationTime }} min</p>
 
-       <!-- AVALIAÇÃO -->
-    <div class="stars">
-    <span
-      *ngFor="let star of [1,2,3,4,5]"
-      [class.filled]="star <= averageRating"
-    >
-      ★
-    </span>
-  </div>
-
-
-      <!-- FAVORITO -->
+      <div class="stars">
+        <span
+          *ngFor="let star of [1, 2, 3, 4, 5]"
+          [class.filled]="star <= averageRating"
+        >
+          ★
+        </span>
+      </div>
       <i
-      class="heart"
-      [class.active]="isFavorite"
-      (click)="toggleFavorito()"
+        class="heart"
+        [class.active]="isFavorite"
+        (click)="toggleFavorito()"
       ></i>
     </div>
   </div>
@@ -42,7 +30,8 @@
   <h3>Ingredientes</h3>
   <ul>
     <li *ngFor="let ing of receita.recipeIngredients">
-      {{ ing.amount }} {{ ing.measurementType?.name }} de {{ ing.ingredient?.name }}
+      {{ ing.amount }} {{ ing.measurementType?.name }} de
+      {{ ing.ingredient?.name }}
     </li>
   </ul>
 
@@ -52,61 +41,53 @@
   <hr />
 
   <div class="comments-section">
-  <h2>Comentários</h2>
+    <h2>Comentários</h2>
 
-  <div class="comment" *ngFor="let c of comments">
-    <div class="comment-author">
-      {{ c.userName }}
+    <div class="comment" *ngFor="let c of comments">
+      <div class="comment-author">
+        {{ c.userName }}
+      </div>
+
+      <div class="comment-text">
+        {{ c.comments }}
+      </div>
     </div>
 
-    <div class="comment-text">
-      {{ c.comments }}
+    <h4>Deixe seu comentário:</h4>
+    <div class="comment-box">
+      <textarea
+        [(ngModel)]="newComment"
+        placeholder="Escreva seu comentário..."
+      ></textarea>
+
+      <button class="btn-primary" (click)="addComment()">Comentar</button>
     </div>
   </div>
 
-  <h4>
-    Deixe seu comentário:
-  </h4>
-  <div class="comment-box">
-    <textarea
-      [(ngModel)]="newComment"
-      placeholder="Escreva seu comentário..."
-    ></textarea>
+  <div class="rating-box" *ngIf="isLoggedIn">
+    <h2>Sua avaliação:</h2>
 
-    <button class="btn-primary" (click)="addComment()">
-      Comentar
+    <div class="stars">
+      <span
+        *ngFor="let star of [1, 2, 3, 4, 5]"
+        (mouseenter)="hoverRating = star"
+        (mouseleave)="hoverRating = 0"
+        (click)="rateRecipe(star)"
+        [class.filled]="star <= (hoverRating || userRating)"
+      >
+        ★
+      </span>
+    </div>
+  </div>
+
+  <div class="favorite-rating">
+    <button
+      class="favorite-btn"
+      [class.active]="isFavorite"
+      (click)="toggleFavorito()"
+      *ngIf="isLoggedIn"
+    >
+      ♥
     </button>
   </div>
-  </div>
-
-  <!-- AVALIAÇÃO -->
-<div class="rating-box" *ngIf="isLoggedIn">
-  <h2>Sua avaliação:</h2>
-
-  <div class="stars">
-    <span
-      *ngFor="let star of [1,2,3,4,5]"
-      (mouseenter)="hoverRating = star"
-      (mouseleave)="hoverRating = 0"
-      (click)="rateRecipe(star)"
-      [class.filled]="star <= (hoverRating || userRating)"
-    >
-      ★
-    </span>
-  </div>
 </div>
-
-
-<!-- FAVORITO + MÉDIA -->
-<div class="favorite-rating">
-  <button
-    class="favorite-btn"
-    [class.active]="isFavorite"
-    (click)="toggleFavorito()"
-    *ngIf="isLoggedIn"
-  >
-    ♥
-  </button>
-</div>
-</div>
-

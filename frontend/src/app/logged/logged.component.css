@@ -1,4 +1,3 @@
-/* ====== LAYOUT GERAL ====== */
 .user-page {
   display: flex;
   flex-direction: column;
@@ -21,7 +20,7 @@
 }
 
 .section-block h3 {
-  color: #6b6b00;
+  color: darkolivegreen;
   border-bottom: 3px solid darkolivegreen;
   padding-bottom: 8px;
   margin-bottom: 30px;
@@ -50,7 +49,7 @@ form {
 .form-group label,
 .form-row label {
   font-weight: bold;
-  color: #556b2f;
+  color: darkolivegreen;
   margin-bottom: 6px;
   font-size: 15px;
 }
@@ -138,22 +137,6 @@ form {
   background-color: #931e1e;
 }
 
-@media (max-width: 768px) {
-  .user-page {
-    padding: 20px;
-  }
-
-  form {
-    padding: 20px;
-  }
-
-  .ingrediente-item {
-    padding: 15px;
-  }
-}
-
-/* ====== LISTAGEM DE RECEITAS ====== */
-
 .recipe-list {
   display: flex;
   flex-direction: column;
@@ -170,16 +153,14 @@ form {
   align-items: flex-start;
 }
 
-/* IMAGEM FIXA */
 .recipe-img {
   width: 350px;
   height: 525px;
-  object-fit: cover;          /* NÃO distorce */
+  object-fit: cover;
   flex-shrink: 0;
   background-color: #eaeaea;
 }
 
-/* CONTEÚDO À DIREITA */
 .recipe-info {
   display: flex;
   flex-direction: column;
@@ -187,15 +168,13 @@ form {
   width: 100%;
 }
 
-/* TÍTULO */
 .recipe-info h4 {
   font-size: 24px;
   font-weight: 600;
-  color: #556b2f;
+  color: darkolivegreen;
   margin-bottom: 5px;
 }
 
-/* TEXTO PADRÃO */
 .recipe-info p {
   margin: 0;
   font-size: 15px;
@@ -203,7 +182,6 @@ form {
   line-height: 1.5;
 }
 
-/* INGREDIENTES */
 .ingredients ul {
   margin: 6px 0 0 18px;
   padding: 0;
@@ -214,13 +192,11 @@ form {
   margin-bottom: 4px;
 }
 
-/* MODO DE PREPARO */
 .preparation p {
   margin-top: 6px;
   white-space: pre-line;
 }
 
-/* BOTÕES */
 .card-buttons {
   display: flex;
   gap: 12px;
@@ -255,25 +231,6 @@ form {
   background-color: #931e1e;
 }
 
-/* ====== RESPONSIVO ====== */
-@media (max-width: 900px) {
-  .recipe-card {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .recipe-img {
-    width: 100%;
-    max-width: 350px;
-    height: 525px;
-  }
-
-  .recipe-info {
-    width: 100%;
-  }
-}
-
-/* GRID */
 .favorite-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -281,9 +238,8 @@ form {
   margin-top: 20px;
 }
 
-/* CARD */
 .favorite-card {
-  background: #f4f4f4; /* cinza igual ao resto */
+  background: #f4f4f4;
   border-radius: 5px;
   overflow: hidden;
   cursor: pointer;
@@ -295,15 +251,13 @@ form {
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
 }
 
-/* IMAGEM – AGORA VERTICAL */
 .favorite-card img {
   width: 100%;
-  height: 220px;              /* 👈 MAIS ALTA (vertical) */
+  height: 220px;
   object-fit: cover;
   display: block;
 }
 
-/* INFO */
 .favorite-info {
   padding: 12px;
   text-align: center;
@@ -313,7 +267,7 @@ form {
   margin: 0;
   font-size: 15px;
   font-weight: 600;
-  color: #3f5e1a; /* verde escuro */
+  color: darkolivegreen;
 }
 
 
